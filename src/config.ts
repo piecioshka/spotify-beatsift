@@ -6,13 +6,15 @@ export const isConfigured = SPOTIFY_CLIENT_ID.length > 0;
 
 /**
  * Adres, na który Spotify odsyła po logowaniu. Musi być identyczny z wpisem
- * w dashboardzie. Domyślnie to bieżąca strona plus `/callback`, więc lokalnie
- * wychodzi `http://127.0.0.1:3000/callback`, a po wdrożeniu adres hostingu.
+ * w dashboardzie. Domyślnie to bieżąca strona plus `callback` pod ścieżką
+ * bazową aplikacji, więc lokalnie wychodzi `http://127.0.0.1:3000/callback`,
+ * a na GitHub Pages `https://<login>.github.io/<repo>/callback`.
  */
 export function redirectUri(): string {
   const configured = import.meta.env.VITE_SPOTIFY_REDIRECT_URI?.trim();
   if (configured) return configured;
-  return `${window.location.origin}/callback`;
+  // BASE_URL kończy się ukośnikiem: `/` lokalnie, `/<repo>/` na GitHub Pages.
+  return `${window.location.origin}${import.meta.env.BASE_URL}callback`;
 }
 
 /** Widełki suwaka BPM. Poniżej 40 i powyżej 220 nie ma sensownej muzyki do filtrowania. */

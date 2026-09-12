@@ -1,13 +1,43 @@
 # Beatsift
 
-A web app that connects to Spotify, pulls your Liked Songs and lets you sift
+<!-- prettier-ignore-start -->
+
+[![github-ci](https://github.com/piecioshka/spotify-beatsift/actions/workflows/ci.yml/badge.svg)](https://github.com/piecioshka/spotify-beatsift/actions/workflows/ci.yml)
+[![github-pages](https://github.com/piecioshka/spotify-beatsift/actions/workflows/pages.yml/badge.svg)](https://github.com/piecioshka/spotify-beatsift/actions/workflows/pages.yml)
+[![license](https://img.shields.io/github/license/piecioshka/spotify-beatsift.svg)](https://piecioshka.mit-license.org)
+![typescript](https://img.shields.io/badge/built%20with-TypeScript-3178c6.svg)
+
+<!-- prettier-ignore-end -->
+
+🔨 A web app that connects to Spotify, pulls your Liked Songs and lets you sift
 out the ones at a given tempo and from a given range of years. Typical use:
 "tracks at 120-130 BPM from 2000-2010". You save the result as a new playlist
 on your account.
 
-Vite + React + TypeScript. Everything happens in the browser: there is no
-backend, data lives in IndexedDB and login goes straight to Spotify via PKCE.
-The interface is available in English and Polish.
+> Give a ⭐️ if this project helped you!
+
+## Live 🌍
+
+The app runs at **[piecioshka.github.io/spotify-beatsift](https://piecioshka.github.io/spotify-beatsift/)**.
+It is a Spotify app in development mode, so only accounts added to its user
+list can log in. To use it with your own account, run it yourself with your
+own Client ID (see below).
+
+![Beatsift filter screen with two range sliders, sort options and a list of matching tracks](assets/screenshot.png)
+
+## Features ✨
+
+- 🎚️ Two range sliders: tempo in BPM and release year, both remembered between visits
+- 🥁 Tempo from Deezer (matched by ISRC) with ReccoBeats as a fallback, because Spotify shut its BPM API down
+- 📅 Release year corrected with Deezer data, so a 2003 song from a 2015 compilation still counts as 2003
+- 💾 Liked Songs cached in IndexedDB; incremental sync stops at the first known track
+- 🔀 Sorting by title, artist, BPM, year or date added _(the same order goes into the playlist)_
+- 📋 Compact view that fits each track on one line
+- ▶️ In-page playback through the Spotify embed, with automatic advance to the next result
+- 💿 One click exports the result as a private playlist on your account
+- 🌍 English and Polish interface with a switch in the header
+- 🍪 No cookies and no tracking; a consent bar explains what lands in the browser
+- 🔐 Login with Authorization Code + PKCE, no client secret and no backend
 
 ## Where the BPM comes from
 
@@ -86,8 +116,15 @@ the server refuses to start instead of silently moving to another one.
 
 ## Deployment
 
-`npm run build` produces static files in `dist/` that any static host can
-serve. Three things to set up:
+Every push to `main` builds the app and publishes it to GitHub Pages through
+`.github/workflows/pages.yml`. The workflow passes the repository subpath as
+`BASE_PATH`, the public address as `VITE_SITE_URL` and the Client ID from the
+`VITE_SPOTIFY_CLIENT_ID` repository secret. A copy of `index.html` saved as
+`404.html` gives the single-page app its fallback, so the return from login at
+`/callback` works even though Pages has no rewrites.
+
+To host it elsewhere, `npm run build` produces static files in `dist/`. Three
+things to set up:
 
 - The host must serve `index.html` for every path (the classic SPA fallback),
   otherwise the return from login at `/callback` ends in a 404.
@@ -153,6 +190,10 @@ catch everything, but most compilations and remasters yes.
   personal tool that is acceptable; for a public deployment a proxy of your
   own is the better choice.
 
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br /> Feel free to check [issues page](https://github.com/piecioshka/spotify-beatsift/issues/).
+
 ## License
 
-MIT, see [LICENSE](./LICENSE).
+[The MIT License](https://piecioshka.mit-license.org) @ 2026

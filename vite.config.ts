@@ -17,6 +17,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    // Strona projektu na GitHub Pages żyje w podkatalogu /<repo>; workflow
+    // podaje go w BASE_PATH (bez końcowego ukośnika, stąd normalizacja).
+    base: withTrailingSlash(env.BASE_PATH),
     server: { host: '127.0.0.1', port: 3000, strictPort: true },
     preview: { host: '127.0.0.1', port: 3000, strictPort: true },
     test: {
@@ -25,3 +28,8 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
+function withTrailingSlash(path: string | undefined): string {
+  if (!path) return '/';
+  return path.endsWith('/') ? path : `${path}/`;
+}

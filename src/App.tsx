@@ -17,9 +17,13 @@ function WithHeader() {
   );
 }
 
+/** Router musi znać podkatalog, w którym żyje strona projektu na GitHub Pages. */
+const BASENAME =
+  import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={BASENAME}>
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route path="/callback" element={<CallbackScreen />} />

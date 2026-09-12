@@ -1,0 +1,55 @@
+name: Pages
+
+# Deploy tylko z main: GitHub Pages odrzuca wdrożenia spoza gałęzi domyślnej.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - id: pages
+        uses: actions/configure-pages@v6
+      - run: npm ci
+      # Strona projektu żyje w podkatalogu /<repo>, stąd BASE_PATH; VITE_SITE_URL
+      # daje bezwzględny adres obrazka Open Graph.
+      - run: npm run build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          VITE_SITE_URL: ${{ steps.pages.outputs.base_url }}
+          VITE_SPOTIFY_CLIENT_ID: ${{ secrets.VITE_SPOTIFY_CLIENT_ID }}
+      # Pages nie ma przepisywania ścieżek, a 404.html serwuje dla każdego
+      # nieznanego adresu. Kopia index.html pod tą nazwą daje SPA fallback,
+      # bez którego powrót z logowania na /callback kończyłby się błędem.
+      - run: cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
