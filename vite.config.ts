@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
     server: { host: '127.0.0.1', port: 3000, strictPort: true },
     preview: { host: '127.0.0.1', port: 3000, strictPort: true },
     test: {
-      include: ['__tests__/**/*.test.ts'],
+      include: ['__tests__/**/*.test.{ts,tsx}'],
       environment: 'node',
     },
   };
