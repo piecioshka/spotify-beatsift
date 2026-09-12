@@ -8,6 +8,7 @@ export const pl = {
 
   'nav.label': 'Nawigacja',
   'nav.github': 'Kod źródłowy na GitHubie',
+  'nav.signedInAs': 'Zalogowano jako {name}',
   'lang.label': 'Język',
   'lang.pl': 'Polski',
   'lang.en': 'English',
@@ -186,6 +187,7 @@ export const en: Messages = {
 
   'nav.label': 'Navigation',
   'nav.github': 'Source code on GitHub',
+  'nav.signedInAs': 'Signed in as {name}',
   'lang.label': 'Language',
   'lang.pl': 'Polski',
   'lang.en': 'English',

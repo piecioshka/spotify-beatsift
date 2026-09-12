@@ -1,22 +1,28 @@
 import { Link, useNavigate } from 'react-router';
+import { clearProfile } from '../api/profile';
 import { clearTokens } from '../auth/tokenStore';
 import { useT } from '../i18n';
 import { GitHubLink } from './GitHubLink';
 import { LanguageSwitch } from './LanguageSwitch';
 import { Logo } from './Logo';
+import { useProfile } from './useProfile';
 import './AppHeader.css';
 
 /**
  * Pasek na ekranach po zalogowaniu: logo z nazwą po lewej, po prawej język,
- * ustawienia i wylogowanie. Logo prowadzi do filtra, nie na `/`, bo start
- * przekierowuje do synchronizacji i każde kliknięcie odpalałoby pobieranie.
+ * zalogowane konto, ustawienia i wylogowanie. Logo prowadzi do filtra, nie
+ * na `/`, bo start przekierowuje do synchronizacji i każde kliknięcie
+ * odpalałoby pobieranie.
  */
 export function AppHeader() {
   const t = useT();
   const navigate = useNavigate();
+  const profile = useProfile();
+  const userName = profile ? (profile.displayName ?? profile.id) : null;
 
   async function signOut() {
     await clearTokens();
+    clearProfile();
     navigate('/', { replace: true });
   }
 
@@ -29,6 +35,18 @@ export function AppHeader() {
 
       <nav className="topbar__nav" aria-label={t('nav.label')}>
         <LanguageSwitch />
+        {userName ? (
+          <a
+            className="topbar__user"
+            href={profile?.url ?? undefined}
+            target="_blank"
+            rel="noreferrer"
+            title={t('nav.signedInAs', { name: userName })}
+            aria-label={t('nav.signedInAs', { name: userName })}
+          >
+            {userName}
+          </a>
+        ) : null}
         <Link className="topbar__link" to="/settings">
           {t('settings.title')}
         </Link>

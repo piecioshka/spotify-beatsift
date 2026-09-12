@@ -43,7 +43,7 @@ type PlaylistResponse = { id: string; external_urls?: { spotify?: string } };
  * wyłącznie jako prywatne. Idziemy przez `POST /me/playlists` i
  * `POST /playlists/{id}/items`: starsze ścieżki `/users/{id}/playlists`
  * i `/playlists/{id}/tracks` Spotify wycofało i odpowiadają 403 Forbidden,
- * a `GET /me` po ID użytkownika wymagałby dodatkowego zakresu.
+ * a ścieżka `/me/...` nie potrzebuje ID użytkownika.
  */
 export async function createPlaylistWithTracks(
   name: string,
