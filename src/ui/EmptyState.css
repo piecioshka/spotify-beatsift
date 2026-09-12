@@ -1,0 +1,19 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.empty__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.empty__body {
+  margin: 0;
+  font-size: 14px;
+}

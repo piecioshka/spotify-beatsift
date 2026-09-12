@@ -1,0 +1,12 @@
+.logo {
+  display: block;
+  flex: none;
+}
+
+.logo__background {
+  fill: var(--color-surface-alt);
+}
+
+.logo__bars {
+  fill: var(--color-accent);
+}

@@ -1,0 +1,7 @@
+.settings {
+  gap: var(--space-md);
+}
+
+.settings__footnote {
+  margin: var(--space-md) 0 0;
+}

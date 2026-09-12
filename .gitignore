@@ -1,0 +1,18 @@
+node_modules/
+dist/
+tmp/*
+!tmp/.gitkeep
+
+# local env files
+.env
+.env*.local
+
+# debug
+npm-debug.*
+*.tsbuildinfo
+
+# macOS
+.DS_Store
+
+# Playwright MCP
+.playwright-mcp/

@@ -1,0 +1,122 @@
+.range {
+  --thumb-size: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.range__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.range__label {
+  font-weight: 600;
+}
+
+.range__value {
+  color: var(--color-accent);
+}
+
+.range__area {
+  position: relative;
+  height: 44px;
+}
+
+/* Tor jest węższy o uchwyt, żeby jego końce pokrywały się ze środkami
+   uchwytów w skrajnych położeniach. Natywny suwak nigdy nie wysuwa
+   uchwytu poza swoją szerokość. Szerokość jest jawna, bo SVG to element
+   zastępowany: z samym `left` i `right` wziąłby szerokość z proporcji
+   viewBoxu, a nie z kontenera. */
+.range__track {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--thumb-size) / 2);
+  width: calc(100% - var(--thumb-size));
+  height: 6px;
+  transform: translateY(-50%);
+  overflow: visible;
+}
+
+.range__rail {
+  fill: var(--color-surface-alt);
+}
+
+.range__fill {
+  fill: var(--color-accent);
+}
+
+/* Oba suwaki zajmują cały obszar, ale reagują tylko ich uchwyty.
+   Dzięki temu dolny nie zasłania górnego i odwrotnie. */
+.range__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  appearance: none;
+  pointer-events: none;
+}
+
+.range__input--top {
+  z-index: 2;
+}
+
+.range__input::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.range__input::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+
+.range__input::-webkit-slider-thumb {
+  appearance: none;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  margin-top: calc((44px - var(--thumb-size)) / 2);
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+  background: var(--color-text);
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.range__input::-moz-range-thumb {
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+  background: var(--color-text);
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.range__input:active::-webkit-slider-thumb {
+  cursor: grabbing;
+}
+
+.range__input:focus-visible {
+  outline: none;
+}
+
+.range__input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.range__input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.range__bounds {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}

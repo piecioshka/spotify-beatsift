@@ -1,0 +1,67 @@
+/* Sticky zamiast fixed: pasek trzyma się dołu okna przy przewijaniu,
+   ale na końcu strony zajmuje własne miejsce i nie zasłania ostatnich
+   wierszy listy. `margin-top: auto` spycha go na dół, gdy lista jest
+   krótsza niż okno. */
+.player {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: auto;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 -8px 24px rgb(0 0 0 / 0.4);
+}
+
+.player__inner {
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.player__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.player__now {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.player__close {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.player__close:hover {
+  opacity: 0.85;
+}
+
+.player__embed {
+  min-height: 80px;
+}
+
+.player__embed iframe {
+  display: block;
+  width: 100%;
+  height: 80px;
+  border: 0;
+  border-radius: var(--radius-md);
+}
+
+.player__inner p {
+  margin: 0;
+}

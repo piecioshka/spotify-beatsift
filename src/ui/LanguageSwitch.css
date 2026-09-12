@@ -1,0 +1,25 @@
+.lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-alt);
+}
+
+.lang__button {
+  min-width: 40px;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lang__button--active {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+}
