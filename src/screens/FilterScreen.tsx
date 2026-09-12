@@ -182,16 +182,18 @@ export function FilterScreen() {
             />
             <span className="text-small">{t('filter.compact')}</span>
           </label>
+          {results.length > 0 ? (
+            <div className="filter__export">
+              <Button
+                label={t('filter.export', { n: results.length })}
+                onClick={handleExport}
+                busy={exporting}
+                disabled={loading}
+                size="small"
+              />
+            </div>
+          ) : null}
         </div>
-
-        {results.length > 0 ? (
-          <Button
-            label={t('filter.export', { n: results.length })}
-            onClick={handleExport}
-            busy={exporting}
-            disabled={loading}
-          />
-        ) : null}
 
         {exported ? (
           <Card title={t('filter.exported.title')}>

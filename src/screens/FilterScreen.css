@@ -37,6 +37,11 @@
   cursor: pointer;
 }
 
+/* Przycisk zapisu siedzi w tym samym rzędzie co sortowanie i idzie do prawej. */
+.filter__export {
+  margin-left: auto;
+}
+
 .filter__select {
   padding: 6px 10px;
   border: 1px solid var(--color-border);

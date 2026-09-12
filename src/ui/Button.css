@@ -33,6 +33,12 @@
   color: var(--color-accent-text);
 }
 
+.button--small {
+  min-height: 34px;
+  padding: 0 var(--space-md);
+  font-size: 14px;
+}
+
 .button--danger {
   background: transparent;
   border-color: var(--color-danger);
