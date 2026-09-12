@@ -34,7 +34,6 @@ export function AppHeader() {
       </Link>
 
       <nav className="topbar__nav" aria-label={t('nav.label')}>
-        <LanguageSwitch />
         {userName ? (
           <a
             className="topbar__user"
@@ -47,6 +46,7 @@ export function AppHeader() {
             {userName}
           </a>
         ) : null}
+        <LanguageSwitch />
         <Link className="topbar__link" to="/settings">
           {t('settings.title')}
         </Link>
