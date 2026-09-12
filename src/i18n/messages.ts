@@ -89,6 +89,10 @@ export const pl = {
   'consent.required':
     'Logowanie wymaga zgody na zapis danych w przeglądarce. Odrzucone dane zostały usunięte; zgodę możesz dać ponownie na pasku u dołu ekranu po odświeżeniu strony.',
 
+  'offline.notice': 'Brak połączenia z internetem. Aplikacja wznowi pracę, gdy sieć wróci.',
+  'error.offline':
+    'Połączenie z internetem zostało przerwane. Synchronizacja ruszy dalej, gdy sieć wróci.',
+
   'crash.title': 'Coś poszło nie tak',
   'crash.body':
     'Aplikacja napotkała błąd, którego nie umiała obsłużyć. Odświeżenie zwykle pomaga. Jeśli błąd wraca, wyczyść zapisane dane: znikną tokeny logowania i pobrana biblioteka, a Ty zaczniesz od ekranu logowania.',
@@ -224,6 +228,9 @@ export const en: Messages = {
   'consent.reject': 'Reject',
   'consent.required':
     'Login requires consent to store data in the browser. The rejected data has been deleted; you can give consent again from the bar at the bottom of the screen after reloading the page.',
+
+  'offline.notice': 'No internet connection. The app will resume when the network is back.',
+  'error.offline': 'The internet connection was lost. Sync will continue once the network is back.',
 
   'crash.title': 'Something went wrong',
   'crash.body':

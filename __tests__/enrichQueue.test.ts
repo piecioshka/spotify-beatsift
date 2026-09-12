@@ -192,6 +192,61 @@ describe('enrichBpm', () => {
     ]);
   });
 
+  it('bez sieci nie oznacza chybionych utworów jako sprawdzonych', async () => {
+    // Sieć znika w trakcie porcji: Deezer zna jeden utwór, drugi już nie
+    // dostał odpowiedzi. Ten drugi ma wrócić do kolejki, a nie dostać
+    // „sprawdzony, brak tempa”.
+    let online = true;
+    let calls = 0;
+    const saved: BpmUpdate[][] = [];
+    const { deezerGet, fetchImpl } = fakeApis(
+      { 'ISRC-J1': { bpm: 120, release_date: '2001-01-01' } },
+      {},
+    );
+
+    const result = await enrichBpm({
+      deezerGet: async (url) => {
+        online = false;
+        return deezerGet(url);
+      },
+      fetchImpl,
+      // Bramka usypia, gdy sieci nie ma; tu sieć „wraca” przy pierwszym uśpieniu.
+      sleep: async () => {
+        online = true;
+      },
+      isOnline: () => online,
+      loadPending: async () => {
+        calls += 1;
+        if (calls === 1) return [row('j1', 'ISRC-J1'), row('j2', 'ISRC-J2')];
+        return [];
+      },
+      saveUpdates: async (updates) => {
+        saved.push(updates);
+      },
+    });
+
+    expect(saved).toEqual([[{ id: 'j1', bpm: 120, source: 'deezer', deezerYear: 2001 }]]);
+    expect(result).toEqual({ processed: 1, resolved: 1 });
+  });
+
+  it('czeka na sieć, zanim sięgnie po porcję', async () => {
+    let online = false;
+    const loadPending = vi.fn(async () => {
+      expect(online).toBe(true);
+      return [];
+    });
+
+    await enrichBpm({
+      isOnline: () => online,
+      sleep: async () => {
+        online = true;
+      },
+      loadPending,
+    });
+
+    expect(loadPending).toHaveBeenCalledTimes(1);
+  });
+
   it('przerwana kolejka nie sięga do bazy po kolejną porcję', async () => {
     const loadPending = vi.fn(async () => []);
 

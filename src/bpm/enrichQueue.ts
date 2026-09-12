@@ -8,6 +8,7 @@ import {
 } from '../api/reccobeats';
 import { applyBpmUpdates, pendingBpmTracks, type BpmUpdate } from '../db/queries';
 import type { TrackRow } from '../db/types';
+import { isOnline as browserIsOnline, waitForOnline } from './online';
 import { chunk, createRateLimiter, mapWithConcurrency } from './rateLimiter';
 
 /**
@@ -31,6 +32,8 @@ export type EnrichOptions = {
   /** Deezer nie wspiera CORS, więc idzie JSONP-em. */
   deezerGet?: JsonGetter;
   sleep?: (ms: number) => Promise<void>;
+  /** Stan sieci; bez niej kolejka czeka, zamiast zbierać błędy. */
+  isOnline?: () => boolean;
   /** Wstrzykiwane wyłącznie w testach, żeby nie dotykać IndexedDB. */
   loadPending?: (limit: number) => Promise<TrackRow[]>;
   saveUpdates?: (updates: BpmUpdate[]) => Promise<void>;
@@ -56,6 +59,7 @@ export async function enrichBpm(options: EnrichOptions = {}): Promise<EnrichProg
     fetchImpl = fetch,
     deezerGet = jsonp,
     sleep = defaultSleep,
+    isOnline = browserIsOnline,
     loadPending = pendingBpmTracks,
     saveUpdates = applyBpmUpdates,
   } = options;
@@ -66,12 +70,22 @@ export async function enrichBpm(options: EnrichOptions = {}): Promise<EnrichProg
   let resolved = 0;
 
   for (;;) {
+    // Bez sieci nie ma po co sięgać po porcję; czekamy, aż wróci.
+    await waitForOnline(signal, { isOnline, sleep });
     if (signal?.cancelled) break;
 
     const portion = await loadPending(PORTION);
     if (portion.length === 0) break;
 
     const updates = new Map<string, BpmUpdate>();
+
+    // Sieć sprawdzamy po każdym przebiegu, nie tylko na końcu: krótka
+    // przerwa w środku porcji też oznacza, że część chybień to brak
+    // odpowiedzi, a nie brak utworu w źródle.
+    let wentOffline = false;
+    const noteNetwork = () => {
+      if (!isOnline()) wentOffline = true;
+    };
 
     // Przebieg 1: Deezer, po jednym zapytaniu na utwór z ISRC.
     const withIsrc = portion.filter((track) => track.isrc !== null);
@@ -102,6 +116,8 @@ export async function enrichBpm(options: EnrichOptions = {}): Promise<EnrichProg
       }
     });
 
+    noteNetwork();
+
     // Przebieg 2: ReccoBeats dla wszystkiego, czego Deezer nie ustalił.
     const missing = portion.filter((track) => updates.get(track.id)?.bpm == null);
     for (const batch of chunk(missing, RECCOBEATS_BATCH)) {
@@ -129,20 +145,29 @@ export async function enrichBpm(options: EnrichOptions = {}): Promise<EnrichProg
         }
       }
 
+      noteNetwork();
       await sleep(RECCOBEATS_GAP_MS);
     }
 
-    // Utwory bez żadnego trafienia też oznaczamy jako sprawdzone.
-    const batchUpdates = portion.map<BpmUpdate>(
-      (track) =>
-        updates.get(track.id) ?? { id: track.id, bpm: null, source: null, deezerYear: null },
-    );
+    // Utwory bez żadnego trafienia też oznaczamy jako sprawdzone. Wyjątek:
+    // gdy sieć padła w trakcie porcji, zapisujemy tylko trafienia, a resztę
+    // zostawiamy w kolejce na powrót połączenia.
+    const online = !wentOffline;
+    const batchUpdates = online
+      ? portion.map<BpmUpdate>(
+          (track) =>
+            updates.get(track.id) ?? { id: track.id, bpm: null, source: null, deezerYear: null },
+        )
+      : [...updates.values()].filter((update) => update.bpm !== null);
 
-    await saveUpdates(batchUpdates);
+    if (batchUpdates.length > 0) await saveUpdates(batchUpdates);
 
-    processed += portion.length;
+    processed += batchUpdates.length;
     resolved += batchUpdates.filter((update) => update.bpm !== null).length;
     onProgress?.({ processed, resolved });
+
+    // Po zerwaniu sieci wracamy na początek pętli, gdzie czekamy na jej powrót.
+    if (!online) continue;
 
     // Krótsza porcja niż zamówiona oznacza, że kolejka się skończyła.
     if (portion.length < PORTION) break;

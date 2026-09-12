@@ -6,12 +6,14 @@ import { LoginScreen } from './screens/LoginScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { SyncScreen } from './screens/SyncScreen';
 import { AppHeader } from './ui/AppHeader';
+import { OfflineNotice } from './ui/OfflineNotice';
 
 /** Ekrany po zalogowaniu dostają wspólny pasek z logo; logowanie ma własny nagłówek. */
 function WithHeader() {
   return (
     <>
       <AppHeader />
+      <OfflineNotice />
       <Outlet />
     </>
   );

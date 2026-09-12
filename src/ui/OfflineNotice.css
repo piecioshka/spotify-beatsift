@@ -1,0 +1,15 @@
+/* Ta sama szerokość i marginesy co .page, żeby pasek leżał w linii z treścią. */
+.offline {
+  width: 100%;
+  max-width: 640px;
+  margin: var(--space-md) auto 0;
+  padding: 0 var(--space-md);
+}
+
+.offline__box {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-alt);
+}

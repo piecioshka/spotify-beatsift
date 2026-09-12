@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { syncLikedTracks } from '../api/likedTracks';
 import { SpotifyAuthError } from '../api/spotifyClient';
 import { enrichBpm } from '../bpm/enrichQueue';
+import { isOnline } from '../bpm/online';
 import { libraryStats } from '../db/queries';
 import { getSyncState, SYNC_KEYS } from '../db/schema';
 import type { LibraryStats } from '../db/types';
@@ -32,6 +33,8 @@ export function SyncScreen() {
   const [removed, setRemoved] = useState(0);
   const [stats, setStats] = useState<LibraryStats | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Błąd spowodowany brakiem sieci wznawiamy sami, gdy sieć wróci.
+  const [offlineError, setOfflineError] = useState(false);
 
   // Wyjście z ekranu w trakcie pobierania ma zatrzymać kolejne strony.
   const cancelRef = useRef({ cancelled: false });
@@ -74,18 +77,33 @@ export function SyncScreen() {
         navigate('/', { replace: true });
         return;
       }
-      setError(err instanceof Error ? err.message : String(err));
+      // Zerwane połączenie objawia się jako TypeError z fetch, którego treść
+      // nic użytkownikowi nie mówi; stan sieci jest lepszym wyjaśnieniem.
+      if (!isOnline()) {
+        setOfflineError(true);
+        setError(t('error.offline'));
+      } else {
+        setError(err instanceof Error ? err.message : String(err));
+      }
       setPhase('error');
     }
-  }, [isFull, navigate]);
+  }, [isFull, navigate, t]);
 
   /** Ręczne ponowienie po błędzie. */
   const retry = useCallback(() => {
     setPhase('tracks');
     setError(null);
+    setOfflineError(false);
     setTracks({ saved: 0, total: 0 });
     run();
   }, [run]);
+
+  // Po błędzie z braku sieci czekamy na zdarzenie `online` i ponawiamy sami.
+  useEffect(() => {
+    if (phase !== 'error' || !offlineError) return;
+    window.addEventListener('online', retry);
+    return () => window.removeEventListener('online', retry);
+  }, [offlineError, phase, retry]);
 
   useEffect(() => {
     // Lint widzi w `run` wywołania setState i uznaje je za synchroniczne,

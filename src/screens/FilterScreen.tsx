@@ -25,6 +25,7 @@ import { RangeSlider, type Range } from '../ui/RangeSlider';
 import { isSortKey, SORT_KEYS, sortTracks, type SortKey } from '../ui/sorting';
 import { TrackRow } from '../ui/TrackRow';
 import { useDebounced } from '../ui/useDebounced';
+import { useOnline } from '../ui/useOnline';
 import { usePageTitle } from '../ui/usePageTitle';
 import './FilterScreen.css';
 
@@ -34,6 +35,7 @@ export function FilterScreen() {
   const t = useT();
   usePageTitle(t('filter.title'));
   const navigate = useNavigate();
+  const online = useOnline();
 
   // Zakresy i preferencje widoku czytamy raz przy starcie, zapis idzie
   // w obsłudze zdarzeń albo (dla suwaków) po uspokojeniu się filtra.
@@ -188,7 +190,7 @@ export function FilterScreen() {
                 label={t('filter.export', { n: results.length })}
                 onClick={handleExport}
                 busy={exporting}
-                disabled={loading}
+                disabled={loading || !online}
                 size="small"
               />
             </div>
