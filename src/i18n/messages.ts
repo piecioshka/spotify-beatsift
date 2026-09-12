@@ -89,6 +89,13 @@ export const pl = {
   'consent.required':
     'Logowanie wymaga zgody na zapis danych w przeglądarce. Odrzucone dane zostały usunięte; zgodę możesz dać ponownie na pasku u dołu ekranu po odświeżeniu strony.',
 
+  'crash.title': 'Coś poszło nie tak',
+  'crash.body':
+    'Aplikacja napotkała błąd, którego nie umiała obsłużyć. Odświeżenie zwykle pomaga. Jeśli błąd wraca, wyczyść zapisane dane: znikną tokeny logowania i pobrana biblioteka, a Ty zaczniesz od ekranu logowania.',
+  'crash.reload': 'Odśwież stronę',
+  'crash.wipe': 'Wyczyść dane i zacznij od nowa',
+  'crash.details': 'Szczegóły błędu',
+
   'player.label': 'Odtwarzacz',
   'player.playing': 'Gra',
   'player.paused': 'Wstrzymano',
@@ -217,6 +224,13 @@ export const en: Messages = {
   'consent.reject': 'Reject',
   'consent.required':
     'Login requires consent to store data in the browser. The rejected data has been deleted; you can give consent again from the bar at the bottom of the screen after reloading the page.',
+
+  'crash.title': 'Something went wrong',
+  'crash.body':
+    'The app hit an error it could not handle. Reloading usually helps. If the error keeps coming back, clear the stored data: the login tokens and the fetched library will be removed and you will start from the login screen.',
+  'crash.reload': 'Reload the page',
+  'crash.wipe': 'Clear data and start over',
+  'crash.details': 'Error details',
 
   'player.label': 'Player',
   'player.playing': 'Playing',

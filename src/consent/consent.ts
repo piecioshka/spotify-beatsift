@@ -54,11 +54,20 @@ export function acceptConsent(): void {
 
 /** Odmowa kasuje wszystko, co zapisaliśmy, także wcześniejszą akceptację. */
 export async function rejectConsent(): Promise<void> {
+  await wipeAllData();
+  rejected = true;
+  notify();
+}
+
+/**
+ * Usuwa wszystko, co aplikacja zapisała w przeglądarce: tokeny, bibliotekę
+ * i preferencje. Poza odmową zgody korzysta z tego ekran awaryjny, gdy
+ * uszkodzone dane nie pozwalają aplikacji wystartować.
+ */
+export async function wipeAllData(): Promise<void> {
   await clearTokens();
   await resetDatabase();
   clearAppStorage();
-  rejected = true;
-  notify();
 }
 
 /** Usuwa klucze aplikacji z localStorage, zostawiając cudze wpisy w spokoju. */
