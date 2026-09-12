@@ -118,7 +118,7 @@ describe('enrichBpm', () => {
 
     await h.run();
 
-    expect(h.urls.some((url) => url.includes('api.deezer.com'))).toBe(false);
+    expect(h.urls.map((url) => new URL(url).hostname)).not.toContain('api.deezer.com');
     expect(h.saved[0][0]).toMatchObject({ source: 'reccobeats', bpm: 90 });
   });
 
@@ -159,7 +159,7 @@ describe('enrichBpm', () => {
 
     await h.run();
 
-    expect(h.urls.some((url) => url.includes('reccobeats'))).toBe(false);
+    expect(h.urls.map((url) => new URL(url).hostname)).not.toContain('api.reccobeats.com');
   });
 
   it('liczy, ilu utworom udało się przypisać tempo', async () => {
