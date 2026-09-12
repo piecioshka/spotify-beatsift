@@ -45,3 +45,8 @@
   padding: 0 var(--space-md);
   font-size: 14px;
 }
+
+/* Pasek jest przyklejony do dołu, więc ekran pod nim dostaje zapas na ostatnie linie. */
+.app:has(.consent) .page {
+  padding-bottom: 240px;
+}

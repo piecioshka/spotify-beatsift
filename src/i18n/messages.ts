@@ -100,6 +100,43 @@ export const pl = {
   'crash.wipe': 'Wyczyść dane i zacznij od nowa',
   'crash.details': 'Szczegóły błędu',
 
+  'consent.more': 'Co dokładnie zapisujemy',
+
+  'privacy.title': 'Prywatność',
+  'privacy.link': 'Prywatność',
+  'privacy.back': 'Wróć',
+  'privacy.intro':
+    'Beatsift działa w całości w Twojej przeglądarce. Nie ma własnego serwera ani bazy danych: pliki strony serwuje GitHub Pages, a wszystko, co aplikacja pobiera i liczy, zostaje na Twoim urządzeniu.',
+  'privacy.stored.title': 'Co zapisujemy w przeglądarce',
+  'privacy.stored.tokens':
+    'Tokeny logowania do Spotify (localStorage). Dają dostęp do Twoich ulubionych i prywatnych playlist, nie do hasła.',
+  'privacy.stored.library': 'Pobraną listę ulubionych razem z tempem i rokiem wydania (IndexedDB).',
+  'privacy.stored.prefs':
+    'Preferencje: język, zakresy suwaków, sortowanie, zwarty widok i decyzję o zgodzie (localStorage).',
+  'privacy.sent.title': 'Do kogo trafiają dane',
+  'privacy.sent.spotify':
+    'Spotify: logowanie, lista ulubionych i tworzenie playlisty idą prosto z Twojej przeglądarki do api.spotify.com, na zasadach polityki prywatności Spotify.',
+  'privacy.sent.deezer':
+    'Deezer: pytamy o kody ISRC Twoich utworów, żeby ustalić tempo i rok wydania. Deezer widzi przy tym Twój adres IP.',
+  'privacy.sent.reccobeats':
+    'ReccoBeats: dostaje identyfikatory Spotify utworów, których Deezer nie zna.',
+  'privacy.sent.embed':
+    'Odtwarzacz: po naciśnięciu „Odtwórz” strona ładuje wbudowany odtwarzacz z open.spotify.com, który może ustawiać własne ciasteczka we własnej ramce.',
+  'privacy.sent.hosting':
+    'Hosting: GitHub Pages serwuje pliki aplikacji i jak każdy serwer widzi adres IP w logach.',
+  'privacy.cookies.title': 'Ciasteczka i śledzenie',
+  'privacy.cookies.body':
+    'Aplikacja nie ustawia ciasteczek, nie ma analityki ani reklam. Jedyne, co identyfikuje Cię wobec Spotify, to tokeny z Twojego logowania.',
+  'privacy.delete.title': 'Jak usunąć dane',
+  'privacy.delete.signOut': '„Wyloguj” w nagłówku usuwa tokeny.',
+  'privacy.delete.reset': '„Wyczyść pobrane dane” w ustawieniach usuwa bibliotekę z IndexedDB.',
+  'privacy.delete.reject':
+    '„Odrzucam” na pasku zgody usuwa wszystko naraz; to samo robi wyczyszczenie danych witryny w przeglądarce.',
+  'privacy.delete.revoke': 'Dostęp aplikacji do konta cofniesz w ustawieniach Spotify:',
+  'privacy.contact.title': 'Kontakt',
+  'privacy.contact.body':
+    'Kod aplikacji jest otwarty. Pytania i zgłoszenia przyjmuje repozytorium:',
+
   'player.label': 'Odtwarzacz',
   'player.playing': 'Gra',
   'player.paused': 'Wstrzymano',
@@ -238,6 +275,44 @@ export const en: Messages = {
   'crash.reload': 'Reload the page',
   'crash.wipe': 'Clear data and start over',
   'crash.details': 'Error details',
+
+  'consent.more': 'What exactly is stored',
+
+  'privacy.title': 'Privacy',
+  'privacy.link': 'Privacy',
+  'privacy.back': 'Back',
+  'privacy.intro':
+    'Beatsift runs entirely in your browser. It has no server and no database of its own: GitHub Pages serves the files, and everything the app fetches and computes stays on your device.',
+  'privacy.stored.title': 'What is stored in the browser',
+  'privacy.stored.tokens':
+    'Spotify login tokens (localStorage). They grant access to your Liked Songs and private playlists, not to your password.',
+  'privacy.stored.library':
+    'The fetched list of Liked Songs together with tempo and release year (IndexedDB).',
+  'privacy.stored.prefs':
+    'Preferences: language, slider ranges, sorting, compact view and the consent decision (localStorage).',
+  'privacy.sent.title': 'Who receives data',
+  'privacy.sent.spotify':
+    'Spotify: login, the Liked Songs list and playlist creation go straight from your browser to api.spotify.com, under the Spotify privacy policy.',
+  'privacy.sent.deezer':
+    'Deezer: we look up the ISRC codes of your tracks to get tempo and release year. Deezer sees your IP address in the process.',
+  'privacy.sent.reccobeats': 'ReccoBeats: receives the Spotify IDs of tracks Deezer does not know.',
+  'privacy.sent.embed':
+    'Player: after you press “Play”, the page loads the embedded player from open.spotify.com, which may set its own cookies inside its own frame.',
+  'privacy.sent.hosting':
+    'Hosting: GitHub Pages serves the app files and, like any server, sees the IP address in its logs.',
+  'privacy.cookies.title': 'Cookies and tracking',
+  'privacy.cookies.body':
+    'The app sets no cookies and has no analytics or ads. The only thing that identifies you to Spotify is the tokens from your own login.',
+  'privacy.delete.title': 'How to delete the data',
+  'privacy.delete.signOut': '“Sign out” in the header removes the tokens.',
+  'privacy.delete.reset':
+    '“Clear fetched data” in the settings removes the library from IndexedDB.',
+  'privacy.delete.reject':
+    '“Reject” on the consent bar removes everything at once; clearing the site data in your browser does the same.',
+  'privacy.delete.revoke':
+    'You can revoke the app’s access to your account in your Spotify settings:',
+  'privacy.contact.title': 'Contact',
+  'privacy.contact.body': 'The code is open source. Questions and reports go to the repository:',
 
   'player.label': 'Player',
   'player.playing': 'Playing',

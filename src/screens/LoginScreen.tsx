@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { startSignIn } from '../auth/spotifyAuth';
 import { loadTokens } from '../auth/tokenStore';
 import { isConfigured } from '../config';
@@ -88,6 +88,10 @@ export function LoginScreen() {
             <p className="text-muted text-small">{t('login.missingClientId.body')}</p>
           </Card>
         )}
+
+        <p className="login__footer text-muted text-small text-center">
+          <Link to="/privacy">{t('privacy.link')}</Link>
+        </p>
       </div>
     </>
   );

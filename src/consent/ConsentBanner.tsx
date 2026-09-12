@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useT } from '../i18n';
 import { Button } from '../ui/Button';
 import { acceptConsent, rejectConsent, useConsent } from './consent';
@@ -26,7 +26,9 @@ export function ConsentBanner() {
       <div className="consent__inner">
         <div className="consent__text">
           <h2 className="consent__title">{t('consent.title')}</h2>
-          <p className="consent__body text-muted text-small">{t('consent.body')}</p>
+          <p className="consent__body text-muted text-small">
+            {t('consent.body')} <Link to="/privacy">{t('consent.more')}</Link>
+          </p>
         </div>
         <div className="consent__actions">
           <Button label={t('consent.accept')} onClick={acceptConsent} />

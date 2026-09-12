@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { libraryStats } from '../db/queries';
 import { resetDatabase } from '../db/schema';
 import type { LibraryStats } from '../db/types';
@@ -59,6 +59,9 @@ export function SettingsScreen() {
       <Button label={t('settings.reset')} onClick={confirmReset} variant="secondary" />
 
       <p className="settings__footnote text-muted text-small">{t('settings.footnote')}</p>
+      <p className="text-muted text-small">
+        <Link to="/privacy">{t('privacy.link')}</Link>
+      </p>
     </div>
   );
 }

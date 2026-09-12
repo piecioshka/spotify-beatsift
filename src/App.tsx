@@ -3,6 +3,7 @@ import { ConsentBanner } from './consent/ConsentBanner';
 import { CallbackScreen } from './screens/CallbackScreen';
 import { FilterScreen } from './screens/FilterScreen';
 import { LoginScreen } from './screens/LoginScreen';
+import { PrivacyScreen } from './screens/PrivacyScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { SyncScreen } from './screens/SyncScreen';
 import { AppHeader } from './ui/AppHeader';
@@ -29,6 +30,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route path="/callback" element={<CallbackScreen />} />
+        <Route path="/privacy" element={<PrivacyScreen />} />
         <Route element={<WithHeader />}>
           <Route path="/sync" element={<SyncScreen />} />
           <Route path="/filter" element={<FilterScreen />} />
