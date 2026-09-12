@@ -10,13 +10,14 @@
       content="Sift your Spotify Liked Songs by tempo and release year, then save the result as a playlist."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Beatsift" />
     <meta property="og:title" content="Beatsift" />
     <meta
       property="og:description"
       content="Sift your Spotify Liked Songs by tempo and release year, then save the result as a playlist."
     />
-    <meta property="og:image" content="%VITE_SITE_URL%/og.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta
@@ -29,7 +30,6 @@
       name="twitter:description"
       content="Sift your Spotify Liked Songs by tempo and release year, then save the result as a playlist."
     />
-    <meta name="twitter:image" content="%VITE_SITE_URL%/og.png" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
@@ -38,7 +38,17 @@
     <title>Beatsift</title>
   </head>
   <body>
-    <div id="root" class="app"></div>
+    <!-- Treść zastępcza, dopóki nie wystartuje React: widzą ją roboty czytające
+         sam HTML i przeglądarki bez JavaScriptu. Aplikacja podmienia ją w całości. -->
+    <div id="root" class="app">
+      <main class="page">
+        <h1 class="page__title">Beatsift</h1>
+        <p class="text-muted">
+          Sift your Spotify Liked Songs by tempo and release year, then save the result as a
+          playlist. The app needs JavaScript to run.
+        </p>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

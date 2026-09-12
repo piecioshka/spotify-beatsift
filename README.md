@@ -132,9 +132,9 @@ things to set up:
   example `https://beatsift.example/callback`. The app builds this address
   from the current page on its own; set `VITE_SPOTIFY_REDIRECT_URI` at build
   time when it should be different.
-- Set `VITE_SITE_URL` at build time (for example `https://beatsift.example`)
-  so that the Open Graph tags point to an absolute image URL. Without it the
-  tags use a root-relative path, which most link previews ignore.
+- Set `VITE_SITE_URL` at build time (for example `https://beatsift.example`).
+  It switches on the canonical link, `og:url`, the absolute Open Graph image,
+  JSON-LD and `sitemap.xml`; without it the build ships only the static tags.
 
 ## How it works inside
 
