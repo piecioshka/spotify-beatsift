@@ -1,0 +1,16 @@
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  border-radius: 50%;
+  transition: color 120ms ease;
+}
+
+.github-link:hover {
+  color: var(--color-text);
+}
+
+.github-link svg {
+  display: block;
+}

@@ -7,6 +7,7 @@ import { useConsent } from '../consent/consent';
 import { useT } from '../i18n';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
+import { GitHubLink } from '../ui/GitHubLink';
 import { LanguageSwitch } from '../ui/LanguageSwitch';
 import { Logo } from '../ui/Logo';
 import { usePageTitle } from '../ui/usePageTitle';
@@ -55,6 +56,7 @@ export function LoginScreen() {
     <div className="page login">
       <div className="login__lang">
         <LanguageSwitch />
+        <GitHubLink size={22} />
       </div>
 
       <div className="login__hero">

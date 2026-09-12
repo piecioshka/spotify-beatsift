@@ -7,6 +7,7 @@ export const pl = {
   'app.name': 'Beatsift',
 
   'nav.label': 'Nawigacja',
+  'nav.github': 'Kod źródłowy na GitHubie',
   'lang.label': 'Język',
   'lang.pl': 'Polski',
   'lang.en': 'English',
@@ -136,6 +137,7 @@ export const en: Messages = {
   'app.name': 'Beatsift',
 
   'nav.label': 'Navigation',
+  'nav.github': 'Source code on GitHub',
   'lang.label': 'Language',
   'lang.pl': 'Polski',
   'lang.en': 'English',

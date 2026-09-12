@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router';
 import { clearTokens } from '../auth/tokenStore';
 import { useT } from '../i18n';
+import { GitHubLink } from './GitHubLink';
 import { LanguageSwitch } from './LanguageSwitch';
 import { Logo } from './Logo';
 import './AppHeader.css';
@@ -34,6 +35,7 @@ export function AppHeader() {
         <button type="button" className="topbar__link topbar__button" onClick={signOut}>
           {t('settings.signOut')}
         </button>
+        <GitHubLink />
       </nav>
     </header>
   );
