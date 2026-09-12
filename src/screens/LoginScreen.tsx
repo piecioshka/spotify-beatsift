@@ -56,7 +56,7 @@ export function LoginScreen() {
   return (
     <>
       <OfflineNotice />
-      <div className="page login">
+      <main className="page login">
         <div className="login__lang">
           <LanguageSwitch />
           <GitHubLink size={22} />
@@ -92,7 +92,7 @@ export function LoginScreen() {
         <p className="login__footer text-muted text-small text-center">
           <Link to="/privacy">{t('privacy.link')}</Link>
         </p>
-      </div>
+      </main>
     </>
   );
 }

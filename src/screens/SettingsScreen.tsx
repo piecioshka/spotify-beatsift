@@ -32,7 +32,7 @@ export function SettingsScreen() {
   }
 
   return (
-    <div className="page settings">
+    <main className="page settings">
       <h1 className="page__title">{t('settings.title')}</h1>
 
       {stats ? (
@@ -62,6 +62,6 @@ export function SettingsScreen() {
       <p className="text-muted text-small">
         <Link to="/privacy">{t('privacy.link')}</Link>
       </p>
-    </div>
+    </main>
   );
 }

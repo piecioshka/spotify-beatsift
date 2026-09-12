@@ -38,13 +38,13 @@ export function CallbackScreen() {
   if (!error) return null;
 
   return (
-    <div className="page">
+    <main className="page">
       <Card title={t('callback.failedTitle')}>
         <p className="text-muted">{error}</p>
         <p>
           <Link to="/">{t('callback.back')}</Link>
         </p>
       </Card>
-    </div>
+    </main>
   );
 }

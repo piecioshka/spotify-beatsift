@@ -136,7 +136,7 @@ export function FilterScreen() {
   }, [filter, loading, navigate, results]);
 
   return (
-    <div className="page filter">
+    <main className="page filter">
       <div className="filter__controls">
         <RangeSlider
           label={t('filter.tempo')}
@@ -236,7 +236,7 @@ export function FilterScreen() {
       )}
 
       <PlayerBar player={player} />
-    </div>
+    </main>
   );
 }
 

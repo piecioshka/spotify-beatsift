@@ -118,7 +118,7 @@ export function SyncScreen() {
   }, [run]);
 
   return (
-    <div className="page">
+    <main className="page">
       <h1 className="page__title">{t('sync.title')}</h1>
 
       <ProgressBar
@@ -164,6 +164,6 @@ export function SyncScreen() {
           onClick={() => navigate('/filter', { replace: true })}
         />
       ) : null}
-    </div>
+    </main>
   );
 }
