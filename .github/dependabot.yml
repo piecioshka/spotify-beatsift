@@ -1,0 +1,20 @@
+# Aktualizacje zależności: npm i akcje GitHub, raz w tygodniu. Wersje minor
+# i patch wchodzą jedną zgrupowaną paczką, majory osobno, żeby było widać,
+# co wymaga uwagi.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
