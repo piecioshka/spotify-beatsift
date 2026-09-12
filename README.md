@@ -81,7 +81,8 @@ npm install
 3. Copy the **Client ID**. No client secret is needed, login uses PKCE.
 4. **Settings → User Management** → add the e-mail of your Spotify account.
    Without it your own app returns 403 on login. Development mode allows
-   at most 25 manually added accounts.
+   up to 5 allowlisted users, and Spotify requires the app owner to have
+   a Premium account for the app to work at all.
 
 ### 3. Environment variables
 

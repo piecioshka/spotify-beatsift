@@ -47,8 +47,7 @@ function fakeClient() {
   const calls: Array<{ path: string; method?: string; body?: PlaylistBody }> = [];
 
   const respond = (path: string): unknown => {
-    if (path === '/me') return { id: 'piecioshka' };
-    if (path.endsWith('/playlists')) {
+    if (path === '/me/playlists') {
       return { id: 'pl-1', external_urls: { spotify: 'https://open.spotify.com/playlist/pl-1' } };
     }
     return undefined;
@@ -65,19 +64,18 @@ function fakeClient() {
 }
 
 describe('createPlaylistWithTracks', () => {
-  it('pyta o ID użytkownika, tworzy prywatną playlistę i dodaje utwory', async () => {
+  it('tworzy prywatną playlistę i dodaje utwory', async () => {
     const { client, calls } = fakeClient();
 
     const result = await createPlaylistWithTracks('Moja lista', ['a', 'b'], client);
 
-    expect(calls[0].path).toBe('/me');
-    expect(calls[1]).toMatchObject({
-      path: '/users/piecioshka/playlists',
+    expect(calls[0]).toMatchObject({
+      path: '/me/playlists',
       method: 'POST',
       body: { name: 'Moja lista', public: false },
     });
-    expect(calls[2]).toMatchObject({
-      path: '/playlists/pl-1/tracks',
+    expect(calls[1]).toMatchObject({
+      path: '/playlists/pl-1/items',
       body: { uris: ['spotify:track:a', 'spotify:track:b'] },
     });
     expect(result).toMatchObject({ id: 'pl-1', added: 2 });
@@ -89,7 +87,7 @@ describe('createPlaylistWithTracks', () => {
 
     const result = await createPlaylistWithTracks('Duża', ids, client);
 
-    const addCalls = calls.filter((call) => call.path.endsWith('/tracks'));
+    const addCalls = calls.filter((call) => call.path.endsWith('/items'));
     expect(addCalls).toHaveLength(3);
     expect(addCalls[0].body?.uris).toHaveLength(ADD_TRACKS_BATCH);
     expect(addCalls[2].body?.uris).toHaveLength(50);
@@ -101,7 +99,7 @@ describe('createPlaylistWithTracks', () => {
 
     const result = await createPlaylistWithTracks('Pusta', [], client);
 
-    expect(calls.some((call) => call.path.endsWith('/tracks'))).toBe(false);
+    expect(calls.some((call) => call.path.endsWith('/items'))).toBe(false);
     expect(result.added).toBe(0);
   });
 
@@ -110,7 +108,7 @@ describe('createPlaylistWithTracks', () => {
 
     await createPlaylistWithTracks('   ', ['a'], client);
 
-    expect(calls[1].body?.name).toBe('Beatsift');
+    expect(calls[0].body?.name).toBe('Beatsift');
   });
 
   it('przycina zbyt długą nazwę do limitu Spotify', async () => {
@@ -118,6 +116,6 @@ describe('createPlaylistWithTracks', () => {
 
     await createPlaylistWithTracks('x'.repeat(150), ['a'], client);
 
-    expect(calls[1].body?.name).toHaveLength(100);
+    expect(calls[0].body?.name).toHaveLength(100);
   });
 });

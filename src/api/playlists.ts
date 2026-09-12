@@ -34,23 +34,23 @@ export function trackUri(id: string): string {
   return `spotify:track:${id}`;
 }
 
-type Me = { id: string };
 type PlaylistResponse = { id: string; external_urls?: { spotify?: string } };
 
 /**
  * Tworzy prywatną playlistę i dosypuje do niej utwory paczkami po 100.
  *
  * Zakres `playlist-modify-private` wystarcza, bo playlisty tworzymy
- * wyłącznie jako prywatne.
+ * wyłącznie jako prywatne. Idziemy przez `POST /me/playlists` i
+ * `POST /playlists/{id}/items`: starsze ścieżki `/users/{id}/playlists`
+ * i `/playlists/{id}/tracks` Spotify wycofało i odpowiadają 403 Forbidden,
+ * a `GET /me` po ID użytkownika wymagałby dodatkowego zakresu.
  */
 export async function createPlaylistWithTracks(
   name: string,
   trackIds: string[],
   client: Pick<typeof spotify, 'request'> = spotify,
 ): Promise<CreatedPlaylist> {
-  const me = await client.request<Me>('/me');
-
-  const playlist = await client.request<PlaylistResponse>(`/users/${me.id}/playlists`, {
+  const playlist = await client.request<PlaylistResponse>('/me/playlists', {
     method: 'POST',
     body: {
       name: name.trim().slice(0, MAX_NAME_LENGTH) || 'Beatsift',
@@ -61,7 +61,7 @@ export async function createPlaylistWithTracks(
 
   let added = 0;
   for (const batch of chunk(trackIds, ADD_TRACKS_BATCH)) {
-    await client.request(`/playlists/${playlist.id}/tracks`, {
+    await client.request(`/playlists/${playlist.id}/items`, {
       method: 'POST',
       body: { uris: batch.map(trackUri) },
     });
