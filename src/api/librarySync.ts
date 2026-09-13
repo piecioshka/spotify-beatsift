@@ -12,6 +12,9 @@ export type SourceProgress = {
   /** Postęp w bieżącym źródle. */
   saved: number;
   total: number;
+  /** Narastająco po wszystkich źródłach do tej pory, do jednego paska postępu. */
+  savedSoFar: number;
+  totalSoFar: number;
 };
 
 export type SourcesSyncResult = {
@@ -90,6 +93,7 @@ export async function syncSources(options: SourcesSyncOptions): Promise<SourcesS
   }
 
   let saved = 0;
+  let total = 0;
   let stoppedEarly = false;
 
   for (const [index, source] of sources.entries()) {
@@ -104,11 +108,14 @@ export async function syncSources(options: SourcesSyncOptions): Promise<SourcesS
         sourceCount: sources.length,
         sourceName: source.name,
         ...progress,
+        savedSoFar: saved + progress.saved,
+        totalSoFar: total + progress.total,
       });
     report({ saved: 0, total: 0 });
 
     const result = await source.run(report);
     saved += result.saved;
+    total += result.total;
     if (result.stoppedEarly || signal?.cancelled) {
       stoppedEarly = true;
       break;

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { syncLikedTracks } from '../api/likedTracks';
+import { syncSources, type SourceProgress } from '../api/librarySync';
 import { SpotifyAuthError } from '../api/spotifyClient';
 import { enrichBpm } from '../bpm/enrichQueue';
 import { isOnline } from '../bpm/online';
@@ -8,6 +8,7 @@ import { libraryStats } from '../db/queries';
 import { getSyncState, SYNC_KEYS } from '../db/schema';
 import type { LibraryStats } from '../db/types';
 import { useT } from '../i18n';
+import { loadSelection } from '../sources/selection';
 import { Button } from '../ui/Button';
 import { Card, CardRow } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -15,20 +16,30 @@ import { usePageTitle } from '../ui/usePageTitle';
 
 type Phase = 'tracks' | 'bpm' | 'done' | 'error';
 
+const NO_SOURCE: SourceProgress = {
+  sourceIndex: 0,
+  sourceCount: 0,
+  sourceName: '',
+  saved: 0,
+  total: 0,
+  savedSoFar: 0,
+  totalSoFar: 0,
+};
+
 export function SyncScreen() {
   const t = useT();
   usePageTitle(t('sync.title'));
   const navigate = useNavigate();
 
-  // `?full=1` z ekranu ustawień wymusza przejście całej biblioteki,
-  // bo tylko wtedy widać utwory wypisane z ulubionych.
+  // `?full=1` z ekranu ustawień i źródeł wymusza przejście całej biblioteki,
+  // bo tylko wtedy widać utwory, których nie ma już w żadnym źródle.
   const [params] = useSearchParams();
   const isFull = params.get('full') === '1';
 
   // Ekran startuje od razu w trakcie pobierania, bo efekt odpala
   // synchronizację przy wejściu.
   const [phase, setPhase] = useState<Phase>('tracks');
-  const [tracks, setTracks] = useState({ saved: 0, total: 0 });
+  const [source, setSource] = useState<SourceProgress>(NO_SOURCE);
   const [bpm, setBpm] = useState({ processed: 0, resolved: 0, queued: 0 });
   const [removed, setRemoved] = useState(0);
   const [stats, setStats] = useState<LibraryStats | null>(null);
@@ -43,17 +54,24 @@ export function SyncScreen() {
     const signal = { cancelled: false };
     cancelRef.current = signal;
 
+    // Bez wybranych źródeł nie ma czego pobierać: najpierw wybór.
+    const selection = loadSelection();
+    if (!selection) {
+      navigate('/sources', { replace: true });
+      return;
+    }
+
     try {
       const since = await getSyncState(SYNC_KEYS.lastAddedAt);
-      const result = await syncLikedTracks({
+      const result = await syncSources({
+        selection,
         since,
         full: isFull,
         signal,
-        onProgress: setTracks,
+        onProgress: setSource,
       });
       if (signal.cancelled) return;
       setRemoved(result.removed);
-      setTracks({ saved: result.saved, total: result.total });
 
       // Etap drugi: tempo dla utworów, których jeszcze nie sprawdzaliśmy.
       const beforeEnrich = await libraryStats();
@@ -94,7 +112,7 @@ export function SyncScreen() {
     setPhase('tracks');
     setError(null);
     setOfflineError(false);
-    setTracks({ saved: 0, total: 0 });
+    setSource(NO_SOURCE);
     run();
   }, [run]);
 
@@ -117,15 +135,27 @@ export function SyncScreen() {
     };
   }, [run]);
 
+  // Przy kilku źródłach notka mówi, które właśnie idzie; przy jednym tłumaczy stronicowanie.
+  const tracksNote =
+    phase !== 'tracks'
+      ? undefined
+      : source.sourceCount > 1
+        ? t('sync.source.note', {
+            name: source.sourceName,
+            index: source.sourceIndex + 1,
+            count: source.sourceCount,
+          })
+        : t('sync.tracks.note');
+
   return (
     <main className="page">
       <h1 className="page__title">{t('sync.title')}</h1>
 
       <ProgressBar
         label={t('sync.tracks.label')}
-        current={tracks.saved}
-        total={tracks.total}
-        note={phase === 'tracks' ? t('sync.tracks.note') : undefined}
+        current={source.savedSoFar}
+        total={source.totalSoFar}
+        note={tracksNote}
       />
 
       {bpm.queued > 0 ? (

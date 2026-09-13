@@ -9,8 +9,9 @@
 
 <!-- prettier-ignore-end -->
 
-🔨 A web app that connects to Spotify, pulls your Liked Songs and lets you sift
-out the ones at a given tempo and from a given range of years. Typical use:
+🔨 A web app that connects to Spotify, pulls your Liked Songs and the playlists
+you pick, and lets you sift out the tracks at a given tempo and from a given
+range of years. Typical use:
 "tracks at 120-130 BPM from 2000-2010". You save the result as a new playlist
 on your account.
 
@@ -30,7 +31,8 @@ own Client ID (see below).
 - 🎚️ Two range sliders: tempo in BPM and release year, both remembered between visits
 - 🥁 Tempo from Deezer (matched by ISRC) with ReccoBeats as a fallback, because Spotify shut its BPM API down
 - 📅 Release year corrected with Deezer data, so a 2003 song from a 2015 compilation still counts as 2003
-- 💾 Liked Songs cached in IndexedDB; incremental sync stops at the first known track
+- 🗂️ Sources picked once after login: Liked Songs plus any of your own or collaborative playlists, with a select-all switch _(changeable in settings)_
+- 💾 Tracks cached in IndexedDB; Liked Songs sync incrementally and stop at the first known track, playlists get a full pass
 - 🔀 Sorting by title, artist, BPM, year or date added _(the same order goes into the playlist)_
 - 📋 Compact view that fits each track on one line
 - ▶️ In-page playback through the Spotify embed, with automatic advance to the next result
@@ -145,28 +147,36 @@ things to set up:
    is remembered in `localStorage`; reject wipes everything the app has
    written and disables login, and the bar comes back on the next load.
 1. **Login** via Authorization Code with PKCE, no client secret. Tokens land
-   in `localStorage`. Scopes: `user-library-read` for Liked Songs and
-   `playlist-modify-private` for the export.
-2. **Sync** walks `GET /v1/me/tracks` in pages of 50 and writes the tracks to
-   IndexedDB. Incremental by default, meaning it stops at the first track it
-   already knows. A full pass, available in settings, additionally deletes
-   from the database whatever you removed from Liked Songs.
-3. **BPM lookup** goes through the database in two passes, Deezer and
+   in `localStorage`. Scopes: `user-library-read` for Liked Songs,
+   `playlist-read-private` and `playlist-read-collaborative` for your
+   playlists and `playlist-modify-private` for the export.
+2. **Sources** are picked once after the first login: Liked Songs plus any of
+   your own or collaborative playlists (followed playlists of other users are
+   left out). The choice lives in `localStorage` and can be changed in
+   settings; every change runs a full pass.
+3. **Sync** walks `GET /v1/me/tracks` in pages of 50 for Liked Songs and
+   `GET /v1/playlists/{id}/items` for every selected playlist, writing the
+   tracks to IndexedDB. Liked Songs sync incrementally, meaning the walk
+   stops at the first track it already knows; playlists always get a full
+   pass, because tracks can be removed from them. A full pass, available in
+   settings, additionally deletes from the database whatever no selected
+   source shows any more. A track present in several sources is one record.
+4. **BPM lookup** goes through the database in two passes, Deezer and
    ReccoBeats. The queue respects rate limits and saves results after every
    portion, so after closing the tab it resumes where it left off.
-4. **Filtering** is a pass over all tracks in memory. A few thousand records
+5. **Filtering** is a pass over all tracks in memory. A few thousand records
    go through the filter in a fraction of a millisecond, so there is no point
    in building indexes. The list can be sorted (title, artist, BPM, year,
    date added) and switched to a compact view. Slider ranges, sort order,
    view and language persist in `localStorage`. The order of the list is also
    the order of the playlist and of the player.
-5. **Playback** from the result list uses the embedded Spotify player
+6. **Playback** from the result list uses the embedded Spotify player
    (iFrame API), with no extra scopes and no Premium. When a track ends the
    next one from the list starts. Full tracks play when you are logged in to
    Spotify in the same browser; otherwise the embed plays 30-second
    previews. The browser may block the automatic start, in which case the
    button inside the player remains.
-6. **Export** creates a private playlist and adds the tracks in batches
+7. **Export** creates a private playlist and adds the tracks in batches
    of 100.
 
 ### The release year can be made up

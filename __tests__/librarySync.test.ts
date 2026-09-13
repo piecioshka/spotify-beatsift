@@ -53,8 +53,14 @@ describe('syncSources', () => {
       full: false,
       since: '2024-01-01T00:00:00Z',
     });
-    expect(h.progress[0]).toMatchObject({ sourceIndex: 0, sourceCount: 3 });
-    expect(h.progress.at(-1)).toMatchObject({ sourceIndex: 2, sourceName: 'Chill' });
+    expect(h.progress[0]).toMatchObject({ sourceIndex: 0, sourceCount: 3, savedSoFar: 0 });
+    // Start trzeciego źródła: dwa poprzednie dały 10 + 5, bieżące jeszcze 0.
+    expect(h.progress.at(-1)).toMatchObject({
+      sourceIndex: 2,
+      sourceName: 'Chill',
+      savedSoFar: 15,
+      totalSoFar: 15,
+    });
   });
 
   it('bez polubionych pomija ich synchronizację', async () => {

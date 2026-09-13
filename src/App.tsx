@@ -5,6 +5,7 @@ import { FilterScreen } from './screens/FilterScreen';
 import { LoginScreen } from './screens/LoginScreen';
 import { PrivacyScreen } from './screens/PrivacyScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
+import { SourcesScreen } from './screens/SourcesScreen';
 import { SyncScreen } from './screens/SyncScreen';
 import { AppHeader } from './ui/AppHeader';
 import { OfflineNotice } from './ui/OfflineNotice';
@@ -32,6 +33,7 @@ export function App() {
         <Route path="/callback" element={<CallbackScreen />} />
         <Route path="/privacy" element={<PrivacyScreen />} />
         <Route element={<WithHeader />}>
+          <Route path="/sources" element={<SourcesScreen />} />
           <Route path="/sync" element={<SyncScreen />} />
           <Route path="/filter" element={<FilterScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />

@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 
 const APP_NAME = 'Beatsift';
 const DESCRIPTION =
-  'Sift your Spotify Liked Songs by tempo and release year, then save the result as a playlist.';
+  'Sift your Spotify Liked Songs and playlists by tempo and release year, then save the result as a playlist.';
 
 /**
  * Serwer deweloperski siedzi na 127.0.0.1, nie na `localhost`, bo Spotify od

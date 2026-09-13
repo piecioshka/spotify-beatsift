@@ -5,3 +5,11 @@
 .settings__footnote {
   margin: var(--space-md) 0 0;
 }
+
+.settings__sources {
+  margin: 0 0 var(--space-md);
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}

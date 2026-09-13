@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { completeSignIn } from '../auth/spotifyAuth';
 import { useT } from '../i18n';
+import { afterLoginRoute } from '../sources/route';
 import { Card } from '../ui/Card';
 import { usePageTitle } from '../ui/usePageTitle';
 
 /**
  * Adres, na który Spotify odsyła po ekranie zgody. Dokańcza logowanie
- * i od razu przechodzi do synchronizacji; sam z siebie nic nie pokazuje,
+ * i od razu przechodzi dalej (wybór źródeł albo synchronizacja); sam z siebie nic nie pokazuje,
  * chyba że coś poszło nie tak.
  */
 export function CallbackScreen() {
@@ -26,7 +27,7 @@ export function CallbackScreen() {
 
     completeSignIn(new URLSearchParams(window.location.search)).then((result) => {
       if (result.ok) {
-        navigate('/sync', { replace: true });
+        navigate(afterLoginRoute(), { replace: true });
       } else if (result.reason === 'cancelled') {
         navigate('/', { replace: true });
       } else {

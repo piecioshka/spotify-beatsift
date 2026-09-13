@@ -4,6 +4,7 @@ import { libraryStats } from '../db/queries';
 import { resetDatabase } from '../db/schema';
 import type { LibraryStats } from '../db/types';
 import { useT } from '../i18n';
+import { loadSelection } from '../sources/selection';
 import { Button } from '../ui/Button';
 import { Card, CardRow } from '../ui/Card';
 import { tracksCount } from '../ui/plural';
@@ -15,6 +16,7 @@ export function SettingsScreen() {
   usePageTitle(t('settings.title'));
   const navigate = useNavigate();
   const [stats, setStats] = useState<LibraryStats | null>(null);
+  const [selection] = useState(loadSelection);
 
   const refresh = useCallback(() => {
     libraryStats()
@@ -45,6 +47,22 @@ export function SettingsScreen() {
           ) : null}
         </Card>
       ) : null}
+
+      <Card title={t('settings.sources')}>
+        {selection ? (
+          <ul className="settings__sources text-muted">
+            {selection.liked ? <li>{t('sources.liked')}</li> : null}
+            {selection.playlists.map((playlist) => (
+              <li key={playlist.id}>{playlist.name}</li>
+            ))}
+          </ul>
+        ) : null}
+        <Button
+          label={t('settings.changeSources')}
+          onClick={() => navigate('/sources')}
+          variant="secondary"
+        />
+      </Card>
 
       <Button
         label={t('settings.checkNew')}

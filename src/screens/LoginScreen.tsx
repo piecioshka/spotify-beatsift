@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { startSignIn } from '../auth/spotifyAuth';
-import { loadTokens } from '../auth/tokenStore';
+import { SCOPES, startSignIn } from '../auth/spotifyAuth';
+import { clearTokens, loadTokens, missingScopes } from '../auth/tokenStore';
 import { isConfigured } from '../config';
 import { useConsent } from '../consent/consent';
 import { useT } from '../i18n';
+import { afterLoginRoute } from '../sources/route';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { GitHubLink } from '../ui/GitHubLink';
@@ -20,17 +21,31 @@ export function LoginScreen() {
   const consent = useConsent();
   const navigate = useNavigate();
   const [checkingSession, setCheckingSession] = useState(true);
+  // Sesja sprzed rozszerzenia zakresów: trzeba poprosić o zgodę jeszcze raz.
+  const [needsReconsent, setNeedsReconsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Kto ma już zapisane tokeny, ten nie ogląda ekranu logowania.
+  // Kto ma już zapisane tokeny z kompletem zakresów, ten nie ogląda ekranu
+  // logowania. Sesja bez nowego zakresu jest kasowana, bo Spotify i tak
+  // odrzuciłoby zapytania o playlisty.
   useEffect(() => {
     let active = true;
     loadTokens()
-      .then((tokens) => {
+      .then(async (tokens) => {
         if (!active) return;
-        if (tokens) navigate('/sync', { replace: true });
-        else setCheckingSession(false);
+        if (!tokens) {
+          setCheckingSession(false);
+          return;
+        }
+        if (missingScopes(tokens, SCOPES).length > 0) {
+          await clearTokens();
+          if (!active) return;
+          setNeedsReconsent(true);
+          setCheckingSession(false);
+          return;
+        }
+        navigate(afterLoginRoute(), { replace: true });
       })
       .catch(() => active && setCheckingSession(false));
     return () => {
@@ -72,6 +87,9 @@ export function LoginScreen() {
 
         {isConfigured ? (
           <>
+            {needsReconsent ? (
+              <p className="text-muted text-small text-center">{t('login.reconsent')}</p>
+            ) : null}
             <Button
               label={t('login.button')}
               onClick={handleSignIn}

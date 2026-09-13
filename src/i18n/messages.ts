@@ -14,7 +14,7 @@ export const pl = {
   'lang.en': 'English',
 
   'login.subtitle':
-    'Przesiej ulubione ze Spotify po tempie i roku wydania, a wynik zapisz jako playlistę.',
+    'Przesiej polubione utwory i playlisty ze Spotify po tempie i roku wydania, a wynik zapisz jako playlistę.',
   'login.button': 'Zaloguj przez Spotify',
   'login.failed': 'Logowanie się nie udało.',
   'login.missingClientId.title': 'Brakuje Client ID',
@@ -26,7 +26,7 @@ export const pl = {
   'callback.back': 'Wróć do ekranu logowania',
 
   'sync.title': 'Synchronizacja',
-  'sync.tracks.label': 'Pobieranie ulubionych',
+  'sync.tracks.label': 'Pobieranie utworów',
   'sync.tracks.note': 'Spotify oddaje bibliotekę stronami po 50 utworów.',
   'sync.bpm.label': 'Ustalanie tempa',
   'sync.bpm.note':
@@ -34,7 +34,7 @@ export const pl = {
   'sync.stats.total': 'Utwory w bazie',
   'sync.stats.withBpm': 'Z ustalonym BPM',
   'sync.stats.withYear': 'Ze znanym rokiem',
-  'sync.stats.removed': 'Usunięto z ulubionych',
+  'sync.stats.removed': 'Usunięto ze źródeł',
   'sync.stats.withoutBpm':
     '{n} utworów zostało bez tempa. Żadne ze źródeł ich nie zna, więc nie pojawią się w wynikach filtra.',
   'sync.error.title': 'Synchronizacja przerwana',
@@ -53,7 +53,8 @@ export const pl = {
   'filter.exported.open': 'Otwórz w Spotify',
   'filter.exportFailed': 'Nie udało się zapisać playlisty',
   'filter.empty.title': 'Nic nie pasuje',
-  'filter.empty.noLibrary': 'Biblioteka jest pusta. Wróć do synchronizacji i pobierz ulubione.',
+  'filter.empty.noLibrary':
+    'Biblioteka jest pusta. Wróć do synchronizacji i pobierz utwory z wybranych źródeł.',
   'filter.empty.noBpm':
     'Żaden utwór nie ma jeszcze ustalonego tempa. Uruchom synchronizację ponownie.',
   'filter.empty.hint':
@@ -73,7 +74,7 @@ export const pl = {
   'settings.withBpm': 'Z ustalonym tempem',
   'settings.withYear': 'Ze znanym rokiem',
   'settings.pending': 'Czeka na sprawdzenie',
-  'settings.checkNew': 'Sprawdź nowe ulubione',
+  'settings.checkNew': 'Sprawdź nowe utwory',
   'settings.fullSync': 'Przejdź całą bibliotekę',
   'settings.reset': 'Wyczyść pobrane dane',
   'settings.resetConfirm':
@@ -84,7 +85,7 @@ export const pl = {
 
   'consent.title': 'Ta aplikacja zapisuje dane w Twojej przeglądarce',
   'consent.body':
-    'Bez ciasteczek i bez śledzenia. W localStorage i IndexedDB lądują: tokeny logowania do Spotify, pobrana lista ulubionych z tempem oraz preferencje (język, zakresy, sortowanie). Nic nie wychodzi poza tę przeglądarkę. Dane usuniesz w każdej chwili przez Wyloguj i „Wyczyść pobrane dane” w ustawieniach. Bez zgody logowanie nie zadziała, bo sesji nie ma gdzie zapisać.',
+    'Bez ciasteczek i bez śledzenia. W pamięci przeglądarki (localStorage i IndexedDB) trzymamy tokeny logowania do Spotify, pobraną listę utworów z polubionych i wybranych playlist wraz z tempem oraz preferencje (język, zakresy, sortowanie, wybrane źródła). Nie mamy własnego serwera, więc nic z tego nie opuszcza Twojej przeglądarki. Dane usuniesz w każdej chwili przyciskami „Wyloguj” i „Wyczyść pobrane dane” w ustawieniach. Bez zgody logowanie nie zadziała, bo nie byłoby gdzie zapisać sesji.',
   'consent.accept': 'Akceptuję',
   'consent.reject': 'Odrzucam',
   'consent.required':
@@ -110,13 +111,14 @@ export const pl = {
     'Beatsift działa w całości w Twojej przeglądarce. Nie ma własnego serwera ani bazy danych: pliki strony serwuje GitHub Pages, a wszystko, co aplikacja pobiera i liczy, zostaje na Twoim urządzeniu.',
   'privacy.stored.title': 'Co zapisujemy w przeglądarce',
   'privacy.stored.tokens':
-    'Tokeny logowania do Spotify (localStorage). Dają dostęp do Twoich ulubionych i prywatnych playlist, nie do hasła.',
-  'privacy.stored.library': 'Pobraną listę ulubionych razem z tempem i rokiem wydania (IndexedDB).',
+    'Tokeny logowania do Spotify (localStorage). Dają dostęp do Twoich polubionych utworów i playlist oraz pozwalają tworzyć prywatne playlisty; nie dają dostępu do hasła.',
+  'privacy.stored.library':
+    'Pobraną listę utworów z polubionych i wybranych playlist razem z tempem i rokiem wydania (IndexedDB).',
   'privacy.stored.prefs':
-    'Preferencje: język, zakresy suwaków, sortowanie, zwarty widok i decyzję o zgodzie (localStorage).',
+    'Preferencje: język, zakresy suwaków, sortowanie, zwarty widok, wybrane źródła i decyzję o zgodzie (localStorage).',
   'privacy.sent.title': 'Do kogo trafiają dane',
   'privacy.sent.spotify':
-    'Spotify: logowanie, lista ulubionych i tworzenie playlisty idą prosto z Twojej przeglądarki do api.spotify.com, na zasadach polityki prywatności Spotify.',
+    'Spotify: logowanie, lista polubionych utworów i playlist oraz tworzenie playlisty idą prosto z Twojej przeglądarki do api.spotify.com, na zasadach polityki prywatności Spotify.',
   'privacy.sent.deezer':
     'Deezer: pytamy o kody ISRC Twoich utworów, żeby ustalić tempo i rok wydania. Deezer widzi przy tym Twój adres IP.',
   'privacy.sent.reccobeats':
@@ -138,6 +140,21 @@ export const pl = {
   'privacy.contact.body':
     'Kod aplikacji jest otwarty. Pytania i zgłoszenia przyjmuje repozytorium:',
 
+  'sources.title': 'Źródła utworów',
+  'sources.intro':
+    'Zaznacz, co Beatsift ma pobrać. Utwory z wybranych źródeł trafiają na jedną wspólną listę do filtrowania.',
+  'sources.all': 'Wszystkie',
+  'sources.collaborative': 'współtworzona',
+  'sources.loading': 'Pobieram listę playlist…',
+  'sources.empty': 'Nie masz własnych playlist, więc do wyboru zostają polubione utwory.',
+  'sources.save': 'Zapisz i importuj',
+  'sources.none': 'Zaznacz przynajmniej jedno źródło.',
+  'sources.failed': 'Nie udało się pobrać listy playlist',
+  'settings.sources': 'Źródła',
+  'settings.changeSources': 'Zmień źródła',
+  'login.reconsent':
+    'Beatsift potrzebuje teraz dodatkowej zgody: odczytu Twoich playlist. Zaloguj się ponownie, żeby ją nadać.',
+  'sync.source.note': '{name} ({index} z {count})',
   'sources.liked': 'Polubione utwory',
 
   'player.label': 'Odtwarzacz',
@@ -195,7 +212,7 @@ export const en: Messages = {
   'lang.en': 'English',
 
   'login.subtitle':
-    'Sift your Spotify Liked Songs by tempo and release year, then save the result as a playlist.',
+    'Sift your Spotify Liked Songs and playlists by tempo and release year, then save the result as a playlist.',
   'login.button': 'Log in with Spotify',
   'login.failed': 'Login failed.',
   'login.missingClientId.title': 'Client ID is missing',
@@ -207,7 +224,7 @@ export const en: Messages = {
   'callback.back': 'Back to the login screen',
 
   'sync.title': 'Sync',
-  'sync.tracks.label': 'Fetching Liked Songs',
+  'sync.tracks.label': 'Fetching tracks',
   'sync.tracks.note': 'Spotify returns the library in pages of 50 tracks.',
   'sync.bpm.label': 'Finding tempo',
   'sync.bpm.note':
@@ -215,7 +232,7 @@ export const en: Messages = {
   'sync.stats.total': 'Tracks in the database',
   'sync.stats.withBpm': 'With known BPM',
   'sync.stats.withYear': 'With known year',
-  'sync.stats.removed': 'Removed from Liked Songs',
+  'sync.stats.removed': 'Removed from the sources',
   'sync.stats.withoutBpm':
     '{n} tracks have no tempo. Neither source knows them, so they will not show up in the filter results.',
   'sync.error.title': 'Sync interrupted',
@@ -234,7 +251,8 @@ export const en: Messages = {
   'filter.exported.open': 'Open in Spotify',
   'filter.exportFailed': 'Could not save the playlist',
   'filter.empty.title': 'Nothing matches',
-  'filter.empty.noLibrary': 'The library is empty. Go back to sync and fetch your Liked Songs.',
+  'filter.empty.noLibrary':
+    'The library is empty. Go back to sync and fetch tracks from the selected sources.',
   'filter.empty.noBpm': 'No track has a known tempo yet. Run the sync again.',
   'filter.empty.hint':
     'Tempo is known for {withBpm} of {total} tracks. {withoutBpm} without tempo and {withoutYear} without a release year fall outside the filter. Try widening one of the ranges.',
@@ -253,7 +271,7 @@ export const en: Messages = {
   'settings.withBpm': 'With known tempo',
   'settings.withYear': 'With known year',
   'settings.pending': 'Waiting to be checked',
-  'settings.checkNew': 'Check for new Liked Songs',
+  'settings.checkNew': 'Check for new tracks',
   'settings.fullSync': 'Go through the whole library',
   'settings.reset': 'Clear downloaded data',
   'settings.resetConfirm':
@@ -264,7 +282,7 @@ export const en: Messages = {
 
   'consent.title': 'This app stores data in your browser',
   'consent.body':
-    'No cookies and no tracking. localStorage and IndexedDB hold: your Spotify login tokens, the fetched list of Liked Songs with tempo, and preferences (language, ranges, sorting). Nothing leaves this browser. You can delete the data at any time with Log out and “Clear downloaded data” in settings. Without consent login cannot work, because there is nowhere to keep the session.',
+    'No cookies and no tracking. The browser storage (localStorage and IndexedDB) holds your Spotify login tokens, the fetched list of tracks from Liked Songs and the selected playlists with their tempo, and preferences (language, ranges, sorting, selected sources). There is no server of ours, so none of it leaves your browser. You can delete the data at any time with “Log out” and “Clear fetched data” in the settings. Without consent login cannot work, because there would be nowhere to keep the session.',
   'consent.accept': 'Accept',
   'consent.reject': 'Reject',
   'consent.required':
@@ -289,14 +307,14 @@ export const en: Messages = {
     'Beatsift runs entirely in your browser. It has no server and no database of its own: GitHub Pages serves the files, and everything the app fetches and computes stays on your device.',
   'privacy.stored.title': 'What is stored in the browser',
   'privacy.stored.tokens':
-    'Spotify login tokens (localStorage). They grant access to your Liked Songs and private playlists, not to your password.',
+    'Spotify login tokens (localStorage). They grant access to your Liked Songs and playlists and let the app create private playlists; they do not grant access to your password.',
   'privacy.stored.library':
-    'The fetched list of Liked Songs together with tempo and release year (IndexedDB).',
+    'The fetched list of tracks from Liked Songs and the selected playlists, together with tempo and release year (IndexedDB).',
   'privacy.stored.prefs':
-    'Preferences: language, slider ranges, sorting, compact view and the consent decision (localStorage).',
+    'Preferences: language, slider ranges, sorting, compact view, selected sources and the consent decision (localStorage).',
   'privacy.sent.title': 'Who receives data',
   'privacy.sent.spotify':
-    'Spotify: login, the Liked Songs list and playlist creation go straight from your browser to api.spotify.com, under the Spotify privacy policy.',
+    'Spotify: login, the list of Liked Songs and playlists, and playlist creation go straight from your browser to api.spotify.com, under the Spotify privacy policy.',
   'privacy.sent.deezer':
     'Deezer: we look up the ISRC codes of your tracks to get tempo and release year. Deezer sees your IP address in the process.',
   'privacy.sent.reccobeats': 'ReccoBeats: receives the Spotify IDs of tracks Deezer does not know.',
@@ -318,6 +336,21 @@ export const en: Messages = {
   'privacy.contact.title': 'Contact',
   'privacy.contact.body': 'The code is open source. Questions and reports go to the repository:',
 
+  'sources.title': 'Track sources',
+  'sources.intro':
+    'Choose what Beatsift should fetch. Tracks from the selected sources land on one shared list to filter.',
+  'sources.all': 'All',
+  'sources.collaborative': 'collaborative',
+  'sources.loading': 'Loading your playlists…',
+  'sources.empty': 'You have no playlists of your own, so Liked Songs is the only source.',
+  'sources.save': 'Save and import',
+  'sources.none': 'Select at least one source.',
+  'sources.failed': 'Could not load the playlist list',
+  'settings.sources': 'Sources',
+  'settings.changeSources': 'Change sources',
+  'login.reconsent':
+    'Beatsift now needs one more permission: reading your playlists. Log in again to grant it.',
+  'sync.source.note': '{name} ({index} of {count})',
   'sources.liked': 'Liked Songs',
 
   'player.label': 'Player',

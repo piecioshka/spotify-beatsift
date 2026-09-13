@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router';
 import { clearProfile } from '../api/profile';
 import { clearTokens } from '../auth/tokenStore';
 import { useT } from '../i18n';
+import { clearSelection } from '../sources/selection';
 import { GitHubLink } from './GitHubLink';
 import { LanguageSwitch } from './LanguageSwitch';
 import { Logo } from './Logo';
@@ -23,6 +24,7 @@ export function AppHeader() {
   async function signOut() {
     await clearTokens();
     clearProfile();
+    clearSelection();
     navigate('/', { replace: true });
   }
 

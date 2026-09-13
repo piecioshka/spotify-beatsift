@@ -1,6 +1,6 @@
 {
   "name": "beatsift",
-  "description": "Sift your Spotify Liked Songs by tempo (BPM) and release year, then save the result as a playlist.",
+  "description": "Sift your Spotify Liked Songs and playlists by tempo (BPM) and release year, then save the result as a playlist.",
   "version": "1.0.0",
   "license": "MIT",
   "author": {
