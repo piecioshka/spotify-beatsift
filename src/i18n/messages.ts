@@ -61,10 +61,10 @@ export const pl = {
 
   'sort.name': 'Tytuł A-Z',
   'sort.artists': 'Wykonawca A-Z',
-  'sort.bpm-asc': 'BPM rosnąco',
-  'sort.bpm-desc': 'BPM malejąco',
-  'sort.year-asc': 'Rok rosnąco',
-  'sort.year-desc': 'Rok malejąco',
+  'sort.bpm-asc': 'BPM ▲',
+  'sort.bpm-desc': 'BPM ▼',
+  'sort.year-asc': 'Rok ▲',
+  'sort.year-desc': 'Rok ▼',
   'sort.added-desc': 'Ostatnio dodane',
 
   'settings.title': 'Ustawienia',
@@ -239,10 +239,10 @@ export const en: Messages = {
 
   'sort.name': 'Title A-Z',
   'sort.artists': 'Artist A-Z',
-  'sort.bpm-asc': 'BPM ascending',
-  'sort.bpm-desc': 'BPM descending',
-  'sort.year-asc': 'Year ascending',
-  'sort.year-desc': 'Year descending',
+  'sort.bpm-asc': 'BPM ▲',
+  'sort.bpm-desc': 'BPM ▼',
+  'sort.year-asc': 'Year ▲',
+  'sort.year-desc': 'Year ▼',
   'sort.added-desc': 'Recently added',
 
   'settings.title': 'Settings',
