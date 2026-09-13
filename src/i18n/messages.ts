@@ -138,6 +138,8 @@ export const pl = {
   'privacy.contact.body':
     'Kod aplikacji jest otwarty. Pytania i zgłoszenia przyjmuje repozytorium:',
 
+  'sources.liked': 'Polubione utwory',
+
   'player.label': 'Odtwarzacz',
   'player.playing': 'Gra',
   'player.paused': 'Wstrzymano',
@@ -315,6 +317,8 @@ export const en: Messages = {
     'You can revoke the app’s access to your account in your Spotify settings:',
   'privacy.contact.title': 'Contact',
   'privacy.contact.body': 'The code is open source. Questions and reports go to the repository:',
+
+  'sources.liked': 'Liked Songs',
 
   'player.label': 'Player',
   'player.playing': 'Playing',

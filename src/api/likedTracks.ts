@@ -64,6 +64,13 @@ export type SyncOptions = {
   full?: boolean;
   onProgress?: (progress: SyncProgress) => void;
   signal?: { cancelled: boolean };
+  /**
+   * Znacznik „widziano w tym przebiegu”. Orkiestrator wielu źródeł podaje
+   * jeden wspólny, żeby czyszczenie na końcu objęło wszystkie źródła naraz.
+   */
+  seenAt?: string;
+  /** `false`, gdy porządki robi ktoś wyżej (orkiestrator źródeł). */
+  prune?: boolean;
   client?: Pick<typeof spotify, 'requestPages'>;
   persist?: {
     upsertTracks: (tracks: IncomingTrack[], seenAt: string) => Promise<void>;
@@ -80,16 +87,16 @@ export type SyncResult = {
   removed: number;
 };
 
-/** Pobiera ulubione stronami po 50 i zapisuje każdą stronę od razu. */
+/** Pobiera polubione utwory stronami po 50 i zapisuje każdą stronę od razu. */
 export async function syncLikedTracks(options: SyncOptions = {}): Promise<SyncResult> {
   const client = options.client ?? spotify;
-  const { onProgress, signal, full = false } = options;
+  const { onProgress, signal, full = false, prune = true } = options;
   const persist = options.persist ?? { upsertTracks, pruneUnseenTracks };
 
   // Przy pełnym przejściu nie przerywamy na znanych utworach, bo musimy
   // zobaczyć całą bibliotekę, żeby wiedzieć, czego już w niej nie ma.
   const since = full ? null : options.since;
-  const seenAt = new Date().toISOString();
+  const seenAt = options.seenAt ?? new Date().toISOString();
 
   let saved = 0;
   let total = 0;
@@ -133,10 +140,18 @@ export async function syncLikedTracks(options: SyncOptions = {}): Promise<SyncRe
   // Kasujemy dopiero po przejściu całej biblioteki. Przerwana w połowie
   // synchronizacja wyrzuciłaby utwory, do których po prostu nie doszliśmy.
   let removed = 0;
-  if (full && !stoppedEarly && !signal?.cancelled) {
+  if (prune && full && !stoppedEarly && !signal?.cancelled) {
     removed = await persist.pruneUnseenTracks(seenAt);
     await setSyncState(SYNC_KEYS.lastFullSyncAt, seenAt);
   }
 
   return { saved, total, newestAddedAt, stoppedEarly, removed };
+}
+
+/** Liczba polubionych utworów, bez pobierania ich: Spotify podaje `total` przy każdej stronie. */
+export async function fetchLikedCount(
+  client: Pick<typeof spotify, 'request'> = spotify,
+): Promise<number> {
+  const page = await client.request<{ total?: number }>('/me/tracks?limit=1');
+  return typeof page.total === 'number' ? page.total : 0;
 }

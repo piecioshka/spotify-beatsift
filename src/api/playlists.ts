@@ -74,3 +74,51 @@ export async function createPlaylistWithTracks(
     added,
   };
 }
+
+export type PlaylistSummary = {
+  id: string;
+  name: string;
+  /** Liczba pozycji wg Spotify; przybliżona, bo zawiera też odcinki i pliki lokalne. */
+  total: number;
+  collaborative: boolean;
+};
+
+type PlaylistListItem = {
+  id?: unknown;
+  name?: unknown;
+  collaborative?: unknown;
+  owner?: { id?: unknown } | null;
+  items?: { total?: unknown } | null;
+  /** Starsza nazwa pola, Spotify oznacza ją jako wycofywaną. */
+  tracks?: { total?: unknown } | null;
+};
+
+/**
+ * Playlisty z biblioteki, które da się przeszukać: własne oraz współtworzone.
+ * Obserwowane playlisty innych użytkowników odpadają, bo to nie jest muzyka
+ * użytkownika, a te należące do Spotify i tak odpowiadają 403.
+ */
+export async function fetchOwnPlaylists(
+  ownerId: string,
+  client: Pick<typeof spotify, 'requestPages'> = spotify,
+): Promise<PlaylistSummary[]> {
+  const playlists: PlaylistSummary[] = [];
+
+  await client.requestPages<PlaylistListItem>('/me/playlists?limit=50', (items) => {
+    for (const item of items) {
+      if (typeof item.id !== 'string' || !item.id) continue;
+      const collaborative = item.collaborative === true;
+      if (item.owner?.id !== ownerId && !collaborative) continue;
+
+      const total = item.items?.total ?? item.tracks?.total;
+      playlists.push({
+        id: item.id,
+        name: typeof item.name === 'string' && item.name.trim() ? item.name.trim() : item.id,
+        total: typeof total === 'number' ? total : 0,
+        collaborative,
+      });
+    }
+  });
+
+  return playlists;
+}
