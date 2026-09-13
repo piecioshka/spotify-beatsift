@@ -1,5 +1,12 @@
-import { refreshTokens } from '../auth/spotifyAuth';
-import { clearTokens, isExpired, loadTokens, type StoredTokens } from '../auth/tokenStore';
+import { refreshTokens, SCOPES } from '../auth/spotifyAuth';
+import {
+  clearTokens,
+  isExpired,
+  loadTokens,
+  markReconsentNeeded,
+  missingScopes,
+  type StoredTokens,
+} from '../auth/tokenStore';
 import { t } from '../i18n';
 
 export const SPOTIFY_API = 'https://api.spotify.com/v1';
@@ -29,6 +36,8 @@ export type Deps = {
   clearTokens: () => Promise<void>;
   fetchImpl: typeof fetch;
   sleep: (ms: number) => Promise<void>;
+  /** Zakresy, bez których nie ma sensu wysyłać zapytań; brak = ponowna zgoda. */
+  requiredScopes: readonly string[];
 };
 
 const defaultDeps: Deps = {
@@ -37,6 +46,7 @@ const defaultDeps: Deps = {
   clearTokens,
   fetchImpl: (...args) => fetch(...args),
   sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  requiredScopes: SCOPES,
 };
 
 /** Ile razy najwyżej ponawiamy po 429 albo błędzie serwera, zanim odpuścimy. */
@@ -55,9 +65,22 @@ export type RequestOptions = {
 export function createSpotifyClient(deps: Partial<Deps> = {}) {
   const d: Deps = { ...defaultDeps, ...deps };
 
+  /**
+   * Sesja sprzed rozszerzenia zakresów nie dostanie od Spotify tego, o co
+   * prosimy, więc kasujemy ją od razu i prosimy o zgodę jeszcze raz. Robimy
+   * to tu, a nie tylko na ekranie logowania, bo do aplikacji da się wejść
+   * prosto pod dowolny adres.
+   */
+  async function reconsent(): Promise<never> {
+    await d.clearTokens();
+    markReconsentNeeded();
+    throw new SpotifyAuthError(t('error.spotify.reconsent'));
+  }
+
   async function accessToken(forceRefresh = false): Promise<string> {
     const tokens = await d.loadTokens();
     if (!tokens) throw new SpotifyAuthError();
+    if (missingScopes(tokens, d.requiredScopes).length > 0) return reconsent();
 
     if (!forceRefresh && !isExpired(tokens)) return tokens.accessToken;
 
@@ -98,9 +121,12 @@ export function createSpotifyClient(deps: Partial<Deps> = {}) {
       }
 
       // 403 to brak uprawnień albo konto spoza listy w trybie deweloperskim.
-      // Ponawianie nic tu nie da.
+      // Ponawianie nic tu nie da. Wyjątek: brak zakresu, czyli zapisane
+      // zakresy rozjechały się z tym, co Spotify naprawdę przyznało.
       if (response.status === 403) {
-        throw new SpotifyApiError(403, await errorMessage(response, t('error.spotify.forbidden')));
+        const message = await errorMessage(response, t('error.spotify.forbidden'));
+        if (/insufficient client scope/i.test(message)) return reconsent();
+        throw new SpotifyApiError(403, message);
       }
 
       if (response.status === 429 || response.status >= 500) {

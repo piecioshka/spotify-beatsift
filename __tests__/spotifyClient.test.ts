@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it, vi, type Mock } from 'vitest';
 import {
   createSpotifyClient,
@@ -6,7 +7,8 @@ import {
   SpotifyAuthError,
   type Deps,
 } from '../src/api/spotifyClient';
-import type { StoredTokens } from '../src/auth/tokenStore';
+import { SCOPES } from '../src/auth/spotifyAuth';
+import { consumeReconsentFlag, type StoredTokens } from '../src/auth/tokenStore';
 
 const HOUR = 3600_000;
 
@@ -15,7 +17,7 @@ function tokens(overrides: Partial<StoredTokens> = {}): StoredTokens {
     accessToken: 'access-1',
     refreshToken: 'refresh-1',
     expiresAt: Date.now() + HOUR,
-    scopes: [],
+    scopes: [...SCOPES],
     ...overrides,
   };
 }
@@ -43,7 +45,7 @@ function harness(responses: Response[], overrides: Partial<Deps> = {}) {
         accessToken: `access-after-${refreshToken}`,
         refreshToken: `${refreshToken}-rotated`,
         expiresAt: Date.now() + HOUR,
-        scopes: [],
+        scopes: [...SCOPES],
       };
       return stored.current;
     }),
@@ -153,6 +155,29 @@ describe('spotifyClient', () => {
     const { client } = harness([jsonResponse(204, undefined)]);
 
     await expect(client.request('/playlists/1/tracks')).resolves.toBeUndefined();
+  });
+
+  it('sesja bez wymaganego zakresu jest kasowana i kończy się SpotifyAuthError', async () => {
+    const { client, deps, calls } = harness([], {
+      loadTokens: vi.fn(async () => tokens({ scopes: ['user-library-read'] })),
+    });
+
+    await expect(client.request('/me/playlists')).rejects.toBeInstanceOf(SpotifyAuthError);
+    expect(deps.clearTokens).toHaveBeenCalledTimes(1);
+    expect(calls).toHaveLength(0);
+    // Ekran logowania ma wiedzieć, że chodzi o nową zgodę, nie o zwykłe wygaśnięcie.
+    expect(consumeReconsentFlag()).toBe(true);
+    expect(consumeReconsentFlag()).toBe(false);
+  });
+
+  it('403 „Insufficient client scope” traktuje jak brak zgody, nie jak zwykły 403', async () => {
+    const { client, deps } = harness([
+      jsonResponse(403, { error: { status: 403, message: 'Insufficient client scope' } }),
+    ]);
+
+    await expect(client.request('/me/playlists')).rejects.toBeInstanceOf(SpotifyAuthError);
+    expect(deps.clearTokens).toHaveBeenCalledTimes(1);
+    expect(consumeReconsentFlag()).toBe(true);
   });
 
   it('bez zapisanych tokenów od razu zgłasza SpotifyAuthError', async () => {

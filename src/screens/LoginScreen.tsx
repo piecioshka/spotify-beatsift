@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { SCOPES, startSignIn } from '../auth/spotifyAuth';
-import { clearTokens, loadTokens, missingScopes } from '../auth/tokenStore';
+import { clearTokens, consumeReconsentFlag, loadTokens, missingScopes } from '../auth/tokenStore';
 import { isConfigured } from '../config';
 import { useConsent } from '../consent/consent';
 import { useT } from '../i18n';
@@ -22,7 +22,7 @@ export function LoginScreen() {
   const navigate = useNavigate();
   const [checkingSession, setCheckingSession] = useState(true);
   // Sesja sprzed rozszerzenia zakresów: trzeba poprosić o zgodę jeszcze raz.
-  const [needsReconsent, setNeedsReconsent] = useState(false);
+  const [needsReconsent, setNeedsReconsent] = useState(consumeReconsentFlag);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -180,6 +180,7 @@ export const pl = {
 
   'error.spotify.sessionExpired': 'Sesja Spotify wygasła. Zaloguj się ponownie.',
   'error.spotify.forbidden': 'Spotify odmówiło dostępu.',
+  'error.spotify.reconsent': 'Beatsift potrzebuje dodatkowej zgody. Zaloguj się ponownie.',
   'error.spotify.unavailable': 'Spotify nie odpowiada. Spróbuj później.',
   'error.spotify.generic': 'Błąd Spotify.',
   'error.spotify.status': 'Spotify odpowiedziało statusem {status}.',
@@ -376,6 +377,7 @@ export const en: Messages = {
 
   'error.spotify.sessionExpired': 'Your Spotify session has expired. Log in again.',
   'error.spotify.forbidden': 'Spotify denied access.',
+  'error.spotify.reconsent': 'Beatsift needs an additional permission. Log in again.',
   'error.spotify.unavailable': 'Spotify is not responding. Try again later.',
   'error.spotify.generic': 'Spotify error.',
   'error.spotify.status': 'Spotify responded with status {status}.',

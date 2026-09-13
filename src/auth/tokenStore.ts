@@ -80,3 +80,28 @@ export function parseScopeField(scope: unknown): string[] | null {
   if (typeof scope !== 'string') return null;
   return scope.split(/\s+/).filter(Boolean);
 }
+
+const RECONSENT_KEY = 'beatsift.reconsent';
+
+/**
+ * Sesja została skasowana, bo brakowało jej zakresu. Ekran logowania czyta
+ * tę flagę raz i tłumaczy, czemu trzeba logować się ponownie. sessionStorage,
+ * bo to informacja na jedno wejście, nie ustawienie.
+ */
+export function markReconsentNeeded(): void {
+  try {
+    window.sessionStorage.setItem(RECONSENT_KEY, '1');
+  } catch {
+    // Bez storage'u ekran logowania po prostu nie pokaże wyjaśnienia.
+  }
+}
+
+export function consumeReconsentFlag(): boolean {
+  try {
+    const flagged = window.sessionStorage.getItem(RECONSENT_KEY) === '1';
+    if (flagged) window.sessionStorage.removeItem(RECONSENT_KEY);
+    return flagged;
+  } catch {
+    return false;
+  }
+}
