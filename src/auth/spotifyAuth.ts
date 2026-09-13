@@ -1,14 +1,26 @@
 import { redirectUri, SPOTIFY_CLIENT_ID } from '../config';
 import { authorizeUrl, challengeFromVerifier, randomVerifier, TOKEN_ENDPOINT } from './pkce';
-import { expiresAtFrom, saveTokens, type StoredTokens } from './tokenStore';
+import {
+  expiresAtFrom,
+  loadTokens,
+  parseScopeField,
+  saveTokens,
+  type StoredTokens,
+} from './tokenStore';
 import { t } from '../i18n';
 
 /**
- * Tylko to, czego naprawdę potrzebujemy: odczyt ulubionych i tworzenie
+ * Tylko to, czego naprawdę potrzebujemy: odczyt polubionych utworów, odczyt
+ * własnych i współtworzonych playlist (także prywatnych) oraz tworzenie
  * prywatnej playlisty. Każdy dodatkowy zakres to kolejna pozycja na ekranie
  * zgody, której użytkownik nie rozumie.
  */
-export const SCOPES = ['user-library-read', 'playlist-modify-private'];
+export const SCOPES = [
+  'user-library-read',
+  'playlist-read-private',
+  'playlist-read-collaborative',
+  'playlist-modify-private',
+];
 
 /** Verifier i state czekają w sessionStorage na powrót ze strony Spotify. */
 const PENDING_KEY = 'beatsift.spotify.pkce';
@@ -92,6 +104,7 @@ type TokenResponse = {
   access_token?: string;
   refresh_token?: string;
   expires_in?: number;
+  scope?: string;
   error?: string;
   error_description?: string;
 };
@@ -120,6 +133,8 @@ export async function exchangeCode(
     accessToken: body.access_token,
     refreshToken: body.refresh_token,
     expiresAt: expiresAtFrom(body.expires_in ?? 3600),
+    // Bez pola `scope` zakładamy, że Spotify przyznało to, o co prosiliśmy.
+    scopes: parseScopeField(body.scope) ?? [...SCOPES],
   };
 }
 
@@ -141,10 +156,14 @@ export async function refreshTokens(
 
   if (!body.access_token) throw new Error(t('error.auth.noAccessToken'));
 
+  // Odświeżenie nie zmienia zakresów; gdy odpowiedź ich nie powtarza,
+  // zostają te z poprzedniego wpisu.
+  const previous = await loadTokens();
   const tokens: StoredTokens = {
     accessToken: body.access_token,
     refreshToken: body.refresh_token ?? refreshToken,
     expiresAt: expiresAtFrom(body.expires_in ?? 3600),
+    scopes: parseScopeField(body.scope) ?? previous?.scopes ?? [],
   };
   await saveTokens(tokens);
   return tokens;

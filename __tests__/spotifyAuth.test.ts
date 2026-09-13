@@ -167,6 +167,6 @@ describe('parseTokens', () => {
   it('przepuszcza komplet pól', () => {
     expect(
       parseTokens(JSON.stringify({ accessToken: 'a', refreshToken: 'r', expiresAt: 1 })),
-    ).toEqual({ accessToken: 'a', refreshToken: 'r', expiresAt: 1 });
+    ).toEqual({ accessToken: 'a', refreshToken: 'r', expiresAt: 1, scopes: [] });
   });
 });

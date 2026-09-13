@@ -15,6 +15,7 @@ function tokens(overrides: Partial<StoredTokens> = {}): StoredTokens {
     accessToken: 'access-1',
     refreshToken: 'refresh-1',
     expiresAt: Date.now() + HOUR,
+    scopes: [],
     ...overrides,
   };
 }
@@ -42,6 +43,7 @@ function harness(responses: Response[], overrides: Partial<Deps> = {}) {
         accessToken: `access-after-${refreshToken}`,
         refreshToken: `${refreshToken}-rotated`,
         expiresAt: Date.now() + HOUR,
+        scopes: [],
       };
       return stored.current;
     }),

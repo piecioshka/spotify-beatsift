@@ -5,6 +5,11 @@ export type StoredTokens = {
   refreshToken: string;
   /** Znacznik czasu w ms, kiedy access token przestaje być ważny. */
   expiresAt: number;
+  /**
+   * Zakresy przyznane przy logowaniu. Gdy aplikacja zacznie wymagać nowego,
+   * stara sesja go nie ma i trzeba poprosić o zgodę jeszcze raz.
+   */
+  scopes: string[];
 };
 
 /**
@@ -39,12 +44,18 @@ export function parseTokens(raw: string): StoredTokens | null {
     const parsed: unknown = JSON.parse(raw);
     if (typeof parsed !== 'object' || parsed === null) return null;
 
-    const { accessToken, refreshToken, expiresAt } = parsed as Partial<StoredTokens>;
+    const { accessToken, refreshToken, expiresAt, scopes } = parsed as Partial<StoredTokens>;
     if (typeof accessToken !== 'string' || !accessToken) return null;
     if (typeof refreshToken !== 'string' || !refreshToken) return null;
     if (typeof expiresAt !== 'number' || !Number.isFinite(expiresAt)) return null;
 
-    return { accessToken, refreshToken, expiresAt };
+    // Wpisy sprzed wprowadzenia pola: pusta lista, czyli „nie wiemy, co przyznano”,
+    // a to dla `missingScopes` znaczy tyle samo, co brak wszystkiego.
+    const knownScopes = Array.isArray(scopes)
+      ? scopes.filter((scope): scope is string => typeof scope === 'string')
+      : [];
+
+    return { accessToken, refreshToken, expiresAt, scopes: knownScopes };
   } catch {
     return null;
   }
@@ -57,4 +68,15 @@ export function isExpired(tokens: StoredTokens, now = Date.now()): boolean {
 /** Zamienia `expires_in` w sekundach na bezwzględny znacznik czasu. */
 export function expiresAtFrom(expiresInSeconds: number, now = Date.now()): number {
   return now + expiresInSeconds * 1000;
+}
+
+/** Wymagane zakresy, których zapisana sesja nie ma. Pusta lista = sesja aktualna. */
+export function missingScopes(tokens: StoredTokens, required: readonly string[]): string[] {
+  return required.filter((scope) => !tokens.scopes.includes(scope));
+}
+
+/** Pole `scope` z odpowiedzi Spotify to lista rozdzielona spacjami. */
+export function parseScopeField(scope: unknown): string[] | null {
+  if (typeof scope !== 'string') return null;
+  return scope.split(/\s+/).filter(Boolean);
 }

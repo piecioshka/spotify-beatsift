@@ -25,7 +25,7 @@ describe('zgoda na przechowywanie danych', () => {
 
   it('odmowa czyści tokeny, bibliotekę i preferencje i nie zostawia śladu w storage', async () => {
     acceptConsent();
-    await saveTokens({ accessToken: 'a', refreshToken: 'r', expiresAt: 1 });
+    await saveTokens({ accessToken: 'a', refreshToken: 'r', expiresAt: 1, scopes: [] });
     window.localStorage.setItem('beatsift.filter.sort', 'bpm-desc');
     window.localStorage.setItem('cudzy.klucz', 'zostaje');
     await upsertTracks([
