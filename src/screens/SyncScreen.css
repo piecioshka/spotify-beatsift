@@ -1,0 +1,28 @@
+.sync__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sync__detail {
+  display: grid;
+  grid-template-columns: minmax(0, 8em) minmax(0, 1fr);
+  gap: var(--space-sm);
+}
+
+.sync__detail dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.sync__skipped {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: 0;
+  padding-left: 1.2em;
+  overflow-wrap: anywhere;
+}

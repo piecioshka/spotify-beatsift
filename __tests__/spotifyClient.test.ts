@@ -2,6 +2,7 @@
 import { describe, expect, it, vi, type Mock } from 'vitest';
 import {
   createSpotifyClient,
+  describeEndpoint,
   retryDelayMs,
   SpotifyApiError,
   SpotifyAuthError,
@@ -130,6 +131,18 @@ describe('spotifyClient', () => {
     expect(calls).toHaveLength(1);
   });
 
+  it('404 niesie status, treść od Spotify i ścieżkę żądania', async () => {
+    const { client } = harness([
+      jsonResponse(404, { error: { status: 404, message: 'Resource not found' } }),
+    ]);
+
+    await expect(client.request('/playlists/gone/items?limit=50')).rejects.toMatchObject({
+      status: 404,
+      message: 'Resource not found',
+      endpoint: 'GET /playlists/gone/items',
+    });
+  });
+
   it('na 429 czeka tyle, ile każe Retry-After, i ponawia', async () => {
     const { client, slept } = harness([
       jsonResponse(429, {}, { 'Retry-After': '7' }),
@@ -233,5 +246,13 @@ describe('retryDelayMs', () => {
     expect(retryDelayMs({ headers }, 0)).toBe(2000);
     expect(retryDelayMs({ headers }, 1)).toBe(4000);
     expect(retryDelayMs({ headers }, 2)).toBe(8000);
+  });
+});
+
+describe('describeEndpoint', () => {
+  it('ucina host, prefiks /v1 i parametry', () => {
+    expect(
+      describeEndpoint('GET', 'https://api.spotify.com/v1/playlists/abc/items?limit=50&fields=x'),
+    ).toBe('GET /playlists/abc/items');
   });
 });

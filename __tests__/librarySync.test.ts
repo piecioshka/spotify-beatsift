@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { syncSources, type SourceProgress } from '../src/api/librarySync';
+import { SourceSyncError, syncSources, type SourceProgress } from '../src/api/librarySync';
+import { SpotifyApiError, SpotifyAuthError } from '../src/api/spotifyClient';
 
 function harness(overrides: { cancelDuring?: string } = {}) {
   const calls: string[] = [];
@@ -48,7 +49,7 @@ describe('syncSources', () => {
 
     expect(h.calls).toEqual(['liked', 'p1', 'p2']);
     expect(h.seenAts.size).toBe(1);
-    expect(result).toEqual({ saved: 20, removed: 0, stoppedEarly: false });
+    expect(result).toEqual({ saved: 20, removed: 0, stoppedEarly: false, skipped: [] });
     expect(h.deps.syncLiked.mock.calls[0][0]).toMatchObject({
       full: false,
       since: '2024-01-01T00:00:00Z',
@@ -95,5 +96,60 @@ describe('syncSources', () => {
     expect(h.calls).toEqual(['liked', 'p1']);
     expect(h.deps.prune).not.toHaveBeenCalled();
     expect(result.stoppedEarly).toBe(true);
+  });
+});
+
+describe('syncSources: błędy źródeł', () => {
+  it('pomija playlistę z 404, idzie dalej i wtedy nie czyści', async () => {
+    const h = harness();
+    h.deps.syncPlaylist.mockImplementationOnce(async () => {
+      throw new SpotifyApiError(404, 'Resource not found', 'GET /playlists/p1/items');
+    });
+
+    const result = await syncSources({ selection, full: true, deps: h.deps });
+
+    expect(h.deps.syncPlaylist).toHaveBeenCalledTimes(2);
+    expect(result.skipped).toEqual([
+      {
+        name: 'Bieganie',
+        status: 404,
+        endpoint: 'GET /playlists/p1/items',
+        message: 'Resource not found',
+      },
+    ]);
+    expect(result.saved).toBe(15);
+    expect(h.deps.prune).not.toHaveBeenCalled();
+  });
+
+  it('inny błąd przerywa przebieg i niesie nazwę źródła', async () => {
+    const h = harness();
+    const original = new SpotifyApiError(500, 'Server error', 'GET /playlists/p1/items');
+    h.deps.syncPlaylist.mockImplementationOnce(async () => {
+      throw original;
+    });
+
+    const failure = syncSources({ selection, deps: h.deps });
+
+    await expect(failure).rejects.toBeInstanceOf(SourceSyncError);
+    await expect(failure).rejects.toMatchObject({ sourceName: 'Bieganie', original });
+    expect(h.calls).toEqual(['liked']);
+  });
+
+  it('404 polubionych nie jest pomijane, bo to nie usunięta playlista', async () => {
+    const h = harness();
+    h.deps.syncLiked.mockImplementationOnce(async () => {
+      throw new SpotifyApiError(404, 'Resource not found', 'GET /me/tracks');
+    });
+
+    await expect(syncSources({ selection, deps: h.deps })).rejects.toBeInstanceOf(SourceSyncError);
+  });
+
+  it('błąd sesji przechodzi bez opakowania, żeby ekran wrócił do logowania', async () => {
+    const h = harness();
+    h.deps.syncLiked.mockImplementationOnce(async () => {
+      throw new SpotifyAuthError();
+    });
+
+    await expect(syncSources({ selection, deps: h.deps })).rejects.toBeInstanceOf(SpotifyAuthError);
   });
 });

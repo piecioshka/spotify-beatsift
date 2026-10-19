@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { syncSources, type SourceProgress } from '../api/librarySync';
+import { syncSources, type SkippedSource, type SourceProgress } from '../api/librarySync';
 import { SpotifyAuthError } from '../api/spotifyClient';
+import { describeSyncFailure, type SyncFailure } from '../api/syncFailure';
 import { enrichBpm } from '../bpm/enrichQueue';
 import { isOnline } from '../bpm/online';
 import { libraryStats } from '../db/queries';
@@ -13,6 +14,7 @@ import { Button } from '../ui/Button';
 import { Card, CardRow } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 import { usePageTitle } from '../ui/usePageTitle';
+import './SyncScreen.css';
 
 type Phase = 'tracks' | 'bpm' | 'done' | 'error';
 
@@ -43,7 +45,8 @@ export function SyncScreen() {
   const [bpm, setBpm] = useState({ processed: 0, resolved: 0, queued: 0 });
   const [removed, setRemoved] = useState(0);
   const [stats, setStats] = useState<LibraryStats | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [skipped, setSkipped] = useState<SkippedSource[]>([]);
+  const [error, setError] = useState<SyncFailure | null>(null);
   // Błąd spowodowany brakiem sieci wznawiamy sami, gdy sieć wróci.
   const [offlineError, setOfflineError] = useState(false);
 
@@ -72,6 +75,7 @@ export function SyncScreen() {
       });
       if (signal.cancelled) return;
       setRemoved(result.removed);
+      setSkipped(result.skipped);
 
       // Etap drugi: tempo dla utworów, których jeszcze nie sprawdzaliśmy.
       const beforeEnrich = await libraryStats();
@@ -99,9 +103,11 @@ export function SyncScreen() {
       // nic użytkownikowi nie mówi; stan sieci jest lepszym wyjaśnieniem.
       if (!isOnline()) {
         setOfflineError(true);
-        setError(t('error.offline'));
+        setError({ message: t('error.offline'), details: [] });
       } else {
-        setError(err instanceof Error ? err.message : String(err));
+        // Pełny obiekt błędu (ze stosem) zostaje w konsoli do debugowania.
+        console.error('[beatsift] sync failed', err);
+        setError(describeSyncFailure(err));
       }
       setPhase('error');
     }
@@ -111,6 +117,7 @@ export function SyncScreen() {
   const retry = useCallback(() => {
     setPhase('tracks');
     setError(null);
+    setSkipped([]);
     setOfflineError(false);
     setSource(NO_SOURCE);
     run();
@@ -181,9 +188,42 @@ export function SyncScreen() {
         </Card>
       ) : null}
 
-      {phase === 'error' ? (
+      {skipped.length > 0 ? (
+        <Card title={t('sync.skipped.title')}>
+          <p className="text-muted text-small">{t('sync.skipped.body')}</p>
+          <ul className="sync__skipped">
+            {skipped.map((entry) => (
+              <li key={`${entry.name}-${entry.endpoint}`} className="text-small">
+                {t('sync.skipped.item', {
+                  name: entry.name,
+                  status: entry.status,
+                  endpoint: entry.endpoint,
+                  message: entry.message,
+                })}
+              </li>
+            ))}
+          </ul>
+          <Button
+            label={t('settings.changeSources')}
+            onClick={() => navigate('/sources')}
+            variant="secondary"
+          />
+        </Card>
+      ) : null}
+
+      {phase === 'error' && error ? (
         <Card title={t('sync.error.title')}>
-          <p className="text-danger">{error}</p>
+          <p className="text-danger">{error.message}</p>
+          {error.details.length > 0 ? (
+            <dl className="sync__details">
+              {error.details.map((detail) => (
+                <div key={detail.label} className="sync__detail">
+                  <dt className="text-muted">{detail.label}</dt>
+                  <dd>{detail.value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
           <Button label={t('sync.retry')} onClick={retry} variant="secondary" />
         </Card>
       ) : null}

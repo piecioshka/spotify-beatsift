@@ -38,6 +38,21 @@ export const pl = {
   'sync.stats.withoutBpm':
     '{n} utworów zostało bez tempa. Żadne ze źródeł ich nie zna, więc nie pojawią się w wynikach filtra.',
   'sync.error.title': 'Synchronizacja przerwana',
+  'sync.error.source': 'Źródło',
+  'sync.error.status': 'Status HTTP',
+  'sync.error.endpoint': 'Żądanie',
+  'sync.error.hint': 'Co to znaczy',
+  'sync.error.hint.notFound':
+    'Spotify nie zna tego zasobu. Playlista mogła zostać usunięta albo nie jest już dostępna dla tego konta.',
+  'sync.error.hint.forbidden':
+    'Spotify odmówiło dostępu. W trybie deweloperskim konto musi być na liście użytkowników aplikacji.',
+  'sync.error.hint.rateLimit': 'Za dużo zapytań naraz. Odczekaj chwilę i spróbuj ponownie.',
+  'sync.error.hint.server': 'Awaria po stronie Spotify. Spróbuj ponownie za kilka minut.',
+  'sync.error.time': 'Czas',
+  'sync.skipped.title': 'Pominięte playlisty',
+  'sync.skipped.body':
+    'Spotify nie oddało tych playlist (odpowiedź 404), więc reszta źródeł poszła bez nich. Najpewniej zostały usunięte. Odznacz je w źródłach, żeby ostrzeżenie zniknęło.',
+  'sync.skipped.item': '{name}: {status} {endpoint}, „{message}”',
   'sync.retry': 'Spróbuj ponownie',
   'sync.goToFilter': 'Przejdź do filtra',
 
@@ -237,6 +252,21 @@ export const en: Messages = {
   'sync.stats.withoutBpm':
     '{n} tracks have no tempo. Neither source knows them, so they will not show up in the filter results.',
   'sync.error.title': 'Sync interrupted',
+  'sync.error.source': 'Source',
+  'sync.error.status': 'HTTP status',
+  'sync.error.endpoint': 'Request',
+  'sync.error.hint': 'What it means',
+  'sync.error.hint.notFound':
+    'Spotify does not know this resource. The playlist may have been deleted or is no longer available to this account.',
+  'sync.error.hint.forbidden':
+    'Spotify denied access. In development mode the account has to be on the app user list.',
+  'sync.error.hint.rateLimit': 'Too many requests at once. Wait a moment and try again.',
+  'sync.error.hint.server': 'Spotify is having trouble. Try again in a few minutes.',
+  'sync.error.time': 'Time',
+  'sync.skipped.title': 'Skipped playlists',
+  'sync.skipped.body':
+    'Spotify did not return these playlists (404 response), so the other sources went ahead without them. Most likely they were deleted. Deselect them in sources to make this warning go away.',
+  'sync.skipped.item': '{name}: {status} {endpoint}, "{message}"',
   'sync.retry': 'Try again',
   'sync.goToFilter': 'Go to the filter',
 

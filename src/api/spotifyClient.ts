@@ -24,6 +24,8 @@ export class SpotifyApiError extends Error {
   constructor(
     readonly status: number,
     message: string,
+    /** Metoda i ścieżka żądania, np. `GET /playlists/abc/items`, do opisu błędu. */
+    readonly endpoint = '',
   ) {
     super(message);
     this.name = 'SpotifyApiError';
@@ -96,13 +98,15 @@ export function createSpotifyClient(deps: Partial<Deps> = {}) {
 
   async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
     const url = options.absoluteUrl ?? `${SPOTIFY_API}${path}`;
+    const method = options.method ?? 'GET';
+    const endpoint = describeEndpoint(method, url);
     let refreshed = false;
 
     for (let attempt = 0; ; attempt += 1) {
       const token = await accessToken(refreshed);
 
       const response = await d.fetchImpl(url, {
-        method: options.method ?? 'GET',
+        method,
         headers: {
           Authorization: `Bearer ${token}`,
           ...(options.body === undefined ? {} : { 'Content-Type': 'application/json' }),
@@ -126,7 +130,7 @@ export function createSpotifyClient(deps: Partial<Deps> = {}) {
       if (response.status === 403) {
         const message = await errorMessage(response, t('error.spotify.forbidden'));
         if (/insufficient client scope/i.test(message)) return reconsent();
-        throw new SpotifyApiError(403, message);
+        throw new SpotifyApiError(403, message, endpoint);
       }
 
       if (response.status === 429 || response.status >= 500) {
@@ -134,6 +138,7 @@ export function createSpotifyClient(deps: Partial<Deps> = {}) {
           throw new SpotifyApiError(
             response.status,
             await errorMessage(response, t('error.spotify.unavailable')),
+            endpoint,
           );
         }
         await d.sleep(retryDelayMs(response, attempt));
@@ -144,6 +149,7 @@ export function createSpotifyClient(deps: Partial<Deps> = {}) {
         throw new SpotifyApiError(
           response.status,
           await errorMessage(response, t('error.spotify.generic')),
+          endpoint,
         );
       }
 
@@ -187,6 +193,19 @@ export function retryDelayMs(response: { headers: Headers }, attempt: number): n
   const seconds = header ? Number(header) : NaN;
   if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
   return FALLBACK_RETRY_SECONDS * 1000 * 2 ** attempt;
+}
+
+/**
+ * `GET /playlists/abc/items` z pełnego URL-a: bez hosta, prefiksu `/v1`
+ * i parametrów, bo `fields` i offsety tylko zaciemniają opis błędu.
+ */
+export function describeEndpoint(method: string, url: string): string {
+  try {
+    const path = new URL(url).pathname.replace(/^\/v1(?=\/)/, '');
+    return `${method} ${path}`;
+  } catch {
+    return `${method} ${url}`;
+  }
 }
 
 async function readJson<T>(response: Response): Promise<T | undefined> {
