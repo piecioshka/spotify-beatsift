@@ -11,18 +11,20 @@ const DESCRIPTION =
  * kwietnia 2025 przyjmuje jako Redirect URI tylko `https://` albo adres
  * pętli zwrotnej podany jako IP. Port jest sztywny, bo wpisujemy go
  * w dashboardzie Spotify; zajęty port ma się wywalić, a nie po cichu
- * przeskoczyć na inny i rozjechać się z Redirect URI.
+ * przeskoczyć na inny i rozjechać się z Redirect URI. `PORT` przestawia go
+ * dla serwera za reverse proxy, gdzie Redirect URI idzie przez adres proxy.
  */
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  const port = Number(env.PORT) || 3000;
 
   return {
     // Strona projektu na GitHub Pages żyje w podkatalogu /<repo>; workflow
     // podaje go w BASE_PATH (bez końcowego ukośnika, stąd normalizacja).
     base: withTrailingSlash(env.BASE_PATH),
     plugins: [react(), seo(env.VITE_SITE_URL)],
-    server: { host: '127.0.0.1', port: 3000, strictPort: true },
-    preview: { host: '127.0.0.1', port: 3000, strictPort: true },
+    server: { host: '127.0.0.1', port, strictPort: true },
+    preview: { host: '127.0.0.1', port, strictPort: true },
     test: {
       include: ['__tests__/**/*.test.{ts,tsx}'],
       environment: 'node',

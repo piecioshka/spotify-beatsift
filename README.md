@@ -101,7 +101,9 @@ npm run dev
 
 The app is served at `http://127.0.0.1:3000`. The port is fixed because it is
 part of the Redirect URI registered in the dashboard; when the port is taken
-the server refuses to start instead of silently moving to another one.
+the server refuses to start instead of silently moving to another one. Behind a
+reverse proxy set `PORT` to move it and register the proxy's `https://`
+address plus `/callback` as an extra Redirect URI.
 
 ## Scripts
 
