@@ -4,10 +4,7 @@
 
 .privacy__top {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm) var(--space-md);
 }
 
 .privacy__back {
@@ -24,12 +21,6 @@
 
 .privacy__back:hover {
   color: var(--color-text);
-}
-
-.privacy__tools {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
 }
 
 .privacy__intro,

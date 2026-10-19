@@ -156,7 +156,7 @@ export function SyncScreen() {
 
   return (
     <main className="page">
-      <h1 className="page__title">{t('sync.title')}</h1>
+      <h2 className="page__title">{t('sync.title')}</h2>
 
       <ProgressBar
         label={t('sync.tracks.label')}

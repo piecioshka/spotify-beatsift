@@ -8,10 +8,7 @@ import { useT } from '../i18n';
 import { afterLoginRoute } from '../sources/route';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
-import { GitHubLink } from '../ui/GitHubLink';
-import { LanguageSwitch } from '../ui/LanguageSwitch';
 import { Logo } from '../ui/Logo';
-import { OfflineNotice } from '../ui/OfflineNotice';
 import { usePageTitle } from '../ui/usePageTitle';
 import './LoginScreen.css';
 
@@ -70,18 +67,12 @@ export function LoginScreen() {
 
   return (
     <>
-      <OfflineNotice />
       <main className="page login">
-        <div className="login__lang">
-          <LanguageSwitch />
-          <GitHubLink size={22} />
-        </div>
-
         <div className="login__hero">
           <div className="login__logo">
             <Logo size={72} />
           </div>
-          <h1 className="login__title">{t('app.name')}</h1>
+          <h2 className="login__title">{t('app.name')}</h2>
           <p className="login__subtitle text-muted">{t('login.subtitle')}</p>
         </div>
 

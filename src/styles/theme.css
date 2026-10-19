@@ -1,4 +1,7 @@
-/* Jedno miejsce na kolory i odstępy, żeby ekrany nie rozjeżdżały się stylami. */
+/* Jedno miejsce na kolory i odstępy, żeby ekrany nie rozjeżdżały się stylami.
+   Motyw wybiera atrybut data-theme na <html> (ustawia go skrypt w <head>
+   index.html przed pierwszym malowaniem i przełącznik w pasku); bez
+   atrybutu obowiązuje ciemny. */
 :root {
   --color-bg: #121212;
   --color-surface: #1c1c1e;
@@ -9,6 +12,7 @@
   --color-accent: #1db954;
   --color-accent-text: #04240f;
   --color-danger: #ff6b6b;
+  --color-shadow: rgb(0 0 0 / 0.5);
 
   --space-xs: 4px;
   --space-sm: 8px;
@@ -21,6 +25,21 @@
   --radius-pill: 999px;
 
   color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --color-bg: #f5f5f7;
+  --color-surface: #ffffff;
+  --color-surface-alt: #e8e8ec;
+  --color-border: #d2d2d7;
+  --color-text: #1c1c1e;
+  --color-text-muted: #6e6e73;
+  --color-accent: #1aa34a;
+  --color-accent-text: #ffffff;
+  --color-danger: #d32f2f;
+  --color-shadow: rgb(0 0 0 / 0.12);
+
+  color-scheme: light;
 }
 
 * {
@@ -100,6 +119,29 @@ a {
 
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* Kontrolki paska (język, motyw, GitHub): jedno pudełko 32 px, sama ikona w środku. */
+.icon-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.icon-control:hover {
+  background: var(--color-surface-alt);
+}
+
+.icon-control svg {
+  display: block;
 }
 
 /* Gdy widać pasek odtwarzacza, przewijanie do elementu zostawia na niego miejsce. */

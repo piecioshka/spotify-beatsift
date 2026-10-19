@@ -10,11 +10,14 @@ import { SyncScreen } from './screens/SyncScreen';
 import { AppHeader } from './ui/AppHeader';
 import { OfflineNotice } from './ui/OfflineNotice';
 
-/** Ekrany po zalogowaniu dostają wspólny pasek z logo; logowanie ma własny nagłówek. */
-function WithHeader() {
+/**
+ * Każdy ekran dostaje ten sam pasek z logo; po zalogowaniu pasek ma
+ * dodatkowo konto, ustawienia i wylogowanie.
+ */
+function Shell({ signedIn }: { signedIn: boolean }) {
   return (
     <>
-      <AppHeader />
+      <AppHeader signedIn={signedIn} />
       <OfflineNotice />
       <Outlet />
     </>
@@ -29,10 +32,12 @@ export function App() {
   return (
     <BrowserRouter basename={BASENAME}>
       <Routes>
-        <Route path="/" element={<LoginScreen />} />
-        <Route path="/callback" element={<CallbackScreen />} />
-        <Route path="/privacy" element={<PrivacyScreen />} />
-        <Route element={<WithHeader />}>
+        <Route element={<Shell signedIn={false} />}>
+          <Route path="/" element={<LoginScreen />} />
+          <Route path="/callback" element={<CallbackScreen />} />
+          <Route path="/privacy" element={<PrivacyScreen />} />
+        </Route>
+        <Route element={<Shell signedIn />}>
           <Route path="/sources" element={<SourcesScreen />} />
           <Route path="/sync" element={<SyncScreen />} />
           <Route path="/filter" element={<FilterScreen />} />

@@ -1,13 +1,25 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it } from 'vitest';
-import { getLanguage, initLanguage, isLanguage, setLanguage, t } from '../src/i18n';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+  browserLanguage,
+  getLanguage,
+  initLanguage,
+  isLanguage,
+  setLanguage,
+  t,
+} from '../src/i18n';
 import { en, pl } from '../src/i18n/messages';
 import { tracksCount, tracksLabel } from '../src/ui/plural';
 
 afterEach(() => {
   setLanguage('en');
   window.localStorage.clear();
+  vi.restoreAllMocks();
 });
+
+function stubBrowserLanguage(tag: string): void {
+  vi.spyOn(navigator, 'language', 'get').mockReturnValue(tag);
+}
 
 describe('słowniki', () => {
   it('angielski ma dokładnie te same klucze co polski', () => {
@@ -47,11 +59,26 @@ describe('initLanguage', () => {
     expect(initLanguage()).toBe('pl');
   });
 
-  it('bez zapisu wybiera angielski niezależnie od przeglądarki', () => {
+  it('bez zapisu bierze polski z przeglądarki po prefiksie', () => {
+    stubBrowserLanguage('pl-PL');
+    expect(browserLanguage()).toBe('pl');
+    expect(initLanguage()).toBe('pl');
+    expect(document.documentElement.lang).toBe('pl');
+  });
+
+  it('bez zapisu i bez polskiego w przeglądarce wybiera angielski', () => {
+    stubBrowserLanguage('de-DE');
+    expect(initLanguage()).toBe('en');
+  });
+
+  it('zapisany wybór wygrywa z przeglądarką', () => {
+    stubBrowserLanguage('pl-PL');
+    window.localStorage.setItem('beatsift.language', 'en');
     expect(initLanguage()).toBe('en');
   });
 
   it('nieznany zapis traktuje jak brak', () => {
+    stubBrowserLanguage('en-US');
     window.localStorage.setItem('beatsift.language', 'de');
     expect(initLanguage()).toBe('en');
     expect(isLanguage('de')).toBe(false);

@@ -9,7 +9,7 @@ export function GitHubLink({ size = 20 }: { size?: number }) {
 
   return (
     <a
-      className="github-link"
+      className="github-link icon-control"
       href={REPOSITORY_URL}
       target="_blank"
       rel="noreferrer"

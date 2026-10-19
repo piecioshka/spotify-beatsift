@@ -1,13 +1,29 @@
+/* Pasek na całą szerokość, zawsze 56 px, ten sam na każdym ekranie. */
 .topbar {
+  flex: none;
   width: 100%;
+  height: 56px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+/* Treść paska trzyma się tej samej szerokości i marginesów co .page. */
+.topbar__inner {
+  height: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: var(--space-md) var(--space-md) 0;
+  padding: 0 var(--space-md);
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-sm) var(--space-md);
+  gap: var(--space-md);
+}
+
+.topbar__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .topbar__brand {
@@ -16,8 +32,6 @@
   gap: var(--space-sm);
   text-decoration: none;
   color: var(--color-text);
-  font-weight: 700;
-  font-size: 18px;
   letter-spacing: -0.01em;
 }
 
@@ -28,12 +42,13 @@
 .topbar__nav {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 /* Nazwa konta: wyróżniona kolorem tekstu, ale ucięta, żeby długi nick nie rozsadził paska. */
 .topbar__user {
   max-width: 160px;
+  margin-right: var(--space-sm);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -48,6 +63,7 @@
 }
 
 .topbar__link {
+  margin-right: var(--space-sm);
   color: var(--color-text-muted);
   font-size: 14px;
   text-decoration: underline;
@@ -65,4 +81,11 @@
   font: inherit;
   font-size: 14px;
   cursor: pointer;
+}
+
+/* Na wąskim ekranie nazwa konta nie mieści się obok czterech kontrolek. */
+@media (max-width: 480px) {
+  .topbar__user {
+    display: none;
+  }
 }

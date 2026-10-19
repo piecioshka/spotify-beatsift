@@ -9,9 +9,6 @@ import { en, pl, type MessageKey, type Messages } from './messages';
 
 export type Language = 'pl' | 'en';
 
-/** Kolejność w przełączniku; angielski jest domyślny. */
-export const LANGUAGES: ReadonlyArray<Language> = ['en', 'pl'];
-
 export const DEFAULT_LANGUAGE: Language = 'en';
 
 const STORAGE_KEY = 'beatsift.language';
@@ -43,16 +40,21 @@ export function setLanguage(language: Language): void {
 }
 
 /**
- * Język startowy: zapisany wybór albo angielski. Celowo nie patrzymy na
- * język przeglądarki: interfejs ma być przewidywalny, a przełącznik jest
- * na ekranie logowania i w nagłówku. Wołane raz przy starcie aplikacji.
+ * Język startowy: zapisany wybór, a bez niego język przeglądarki (polski,
+ * gdy `navigator.language` zaczyna się od `pl`, inaczej angielski).
+ * Wołane raz przy starcie aplikacji.
  */
 export function initLanguage(): Language {
   const stored = readStored();
-  const language = isLanguage(stored) ? stored : DEFAULT_LANGUAGE;
+  const language = isLanguage(stored) ? stored : browserLanguage();
   current = language;
   applyToDocument(language);
   return language;
+}
+
+export function browserLanguage(): Language {
+  const tag = typeof navigator === 'undefined' ? '' : (navigator.language ?? '');
+  return tag.toLowerCase().startsWith('pl') ? 'pl' : DEFAULT_LANGUAGE;
 }
 
 function readStored(): string | null {

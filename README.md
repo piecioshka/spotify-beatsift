@@ -37,7 +37,8 @@ own Client ID (see [CONTRIBUTING.md](CONTRIBUTING.md)).
 - 📋 Compact view that fits each track on one line
 - ▶️ In-page playback through the Spotify embed, with automatic advance to the next result
 - 💿 One click exports the result as a private playlist on your account
-- 🌍 English and Polish interface with a switch in the header
+- 🌍 English and Polish interface, picked from the browser language and switchable in the header
+- 🌗 Dark and light theme, following the system by default and switchable in the header
 - 🍪 No cookies and no tracking; a consent bar explains what lands in the browser
 - 🔐 Login with Authorization Code + PKCE, no client secret and no backend
 

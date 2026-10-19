@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from 'react-router';
 import { useT } from '../i18n';
-import { GitHubLink, REPOSITORY_URL } from '../ui/GitHubLink';
-import { LanguageSwitch } from '../ui/LanguageSwitch';
+import { REPOSITORY_URL } from '../ui/GitHubLink';
 import { usePageTitle } from '../ui/usePageTitle';
 import './PrivacyScreen.css';
 
@@ -30,13 +29,9 @@ export function PrivacyScreen() {
         <button type="button" className="privacy__back" onClick={back}>
           ← {t('privacy.back')}
         </button>
-        <div className="privacy__tools">
-          <LanguageSwitch />
-          <GitHubLink size={22} />
-        </div>
       </div>
 
-      <h1 className="page__title">{t('privacy.title')}</h1>
+      <h2 className="page__title">{t('privacy.title')}</h2>
       <p className="privacy__intro">{t('privacy.intro')}</p>
 
       <section className="privacy__section">

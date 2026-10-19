@@ -7,11 +7,10 @@ export const pl = {
   'app.name': 'Beatsift',
 
   'nav.label': 'Nawigacja',
-  'nav.github': 'Kod źródłowy na GitHubie',
+  'nav.github': 'Repozytorium na GitHubie',
   'nav.signedInAs': 'Zalogowano jako {name}',
-  'lang.label': 'Język',
-  'lang.pl': 'Polski',
-  'lang.en': 'English',
+  'lang.switch': 'Przełącznik języka',
+  'theme.toggle': 'Przełącz motyw',
 
   'login.subtitle':
     'Przesiej polubione utwory i playlisty ze Spotify po tempie i roku wydania, a wynik zapisz jako playlistę.',
@@ -221,11 +220,10 @@ export const en: Messages = {
   'app.name': 'Beatsift',
 
   'nav.label': 'Navigation',
-  'nav.github': 'Source code on GitHub',
+  'nav.github': 'Repository on GitHub',
   'nav.signedInAs': 'Signed in as {name}',
-  'lang.label': 'Language',
-  'lang.pl': 'Polski',
-  'lang.en': 'English',
+  'lang.switch': 'Language switcher',
+  'theme.toggle': 'Toggle theme',
 
   'login.subtitle':
     'Sift your Spotify Liked Songs and playlists by tempo and release year, then save the result as a playlist.',

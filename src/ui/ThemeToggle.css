@@ -1,0 +1,7 @@
+.theme-toggle {
+  color: var(--color-text-muted);
+}
+
+.theme-toggle:hover {
+  color: var(--color-text);
+}

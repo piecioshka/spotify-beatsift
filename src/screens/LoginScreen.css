@@ -1,5 +1,4 @@
 .login {
-  min-height: 100vh;
   justify-content: center;
   gap: var(--space-xl);
 }
@@ -24,13 +23,6 @@
 
 .login__subtitle {
   margin: 0;
-}
-
-.login__lang {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-md);
 }
 
 .login__footer {

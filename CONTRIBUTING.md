@@ -110,7 +110,7 @@ things to set up:
    go through the filter in a fraction of a millisecond, so there is no point
    in building indexes. The list can be sorted (title, artist, BPM, year,
    date added) and switched to a compact view. Slider ranges, sort order,
-   view and language persist in `localStorage`. The order of the list is also
+   view, language and theme persist in `localStorage`. The order of the list is also
    the order of the playlist and of the player.
 6. **Playback** from the result list uses the embedded Spotify player
    (iFrame API), with no extra scopes and no Premium. When a track ends the

@@ -121,7 +121,7 @@ export function SourcesScreen() {
 
   return (
     <main className="page sources">
-      <h1 className="page__title">{t('sources.title')}</h1>
+      <h2 className="page__title">{t('sources.title')}</h2>
       <p className="text-muted">{t('sources.intro')}</p>
 
       {error ? (

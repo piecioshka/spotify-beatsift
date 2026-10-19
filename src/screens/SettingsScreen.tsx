@@ -35,7 +35,7 @@ export function SettingsScreen() {
 
   return (
     <main className="page settings">
-      <h1 className="page__title">{t('settings.title')}</h1>
+      <h2 className="page__title">{t('settings.title')}</h2>
 
       {stats ? (
         <Card title={t('settings.library')}>
