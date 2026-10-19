@@ -19,7 +19,7 @@ export const pl = {
   'login.failed': 'Logowanie się nie udało.',
   'login.missingClientId.title': 'Brakuje Client ID',
   'login.missingClientId.body':
-    'Skopiuj plik .env.example do .env i wklej Client ID swojej aplikacji ze Spotify Developer Dashboard, potem uruchom projekt ponownie. Szczegóły są w README.',
+    'Skopiuj plik .env.example do .env i wklej Client ID swojej aplikacji ze Spotify Developer Dashboard, potem uruchom projekt ponownie. Szczegóły są w CONTRIBUTING.md.',
 
   'callback.title': 'Logowanie',
   'callback.failedTitle': 'Logowanie się nie udało',
@@ -233,7 +233,7 @@ export const en: Messages = {
   'login.failed': 'Login failed.',
   'login.missingClientId.title': 'Client ID is missing',
   'login.missingClientId.body':
-    'Copy .env.example to .env, paste the Client ID of your app from the Spotify Developer Dashboard and restart the project. Details are in the README.',
+    'Copy .env.example to .env, paste the Client ID of your app from the Spotify Developer Dashboard and restart the project. Details are in CONTRIBUTING.md.',
 
   'callback.title': 'Login',
   'callback.failedTitle': 'Login failed',
