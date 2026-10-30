@@ -164,7 +164,7 @@ export function FilterScreen() {
           <label className="filter__option">
             <span className="text-muted text-small">{t('filter.sort')}</span>
             <select
-              className="filter__select"
+              className="select"
               value={sortKey}
               onChange={(event) => changeSort(event.target.value)}
             >

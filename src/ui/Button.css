@@ -34,7 +34,7 @@
 }
 
 .button--small {
-  min-height: 34px;
+  min-height: var(--control-height-small);
   padding: 0 var(--space-md);
   font-size: 14px;
 }

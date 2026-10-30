@@ -1,7 +1,7 @@
-/* Jedno miejsce na kolory i odstępy, żeby ekrany nie rozjeżdżały się stylami.
-   Motyw wybiera atrybut data-theme na <html> (ustawia go skrypt w <head>
-   index.html przed pierwszym malowaniem i przełącznik w pasku); bez
-   atrybutu obowiązuje ciemny. */
+/* One place for colors and spacing, so screens do not drift apart in style.
+   The theme comes from the data-theme attribute on <html> (set by the script
+   in the <head> of index.html before the first paint and by the toggle in the
+   top bar); without the attribute the dark theme applies. */
 :root {
   --color-bg: #121212;
   --color-surface: #1c1c1e;
@@ -13,6 +13,10 @@
   --color-accent-text: #04240f;
   --color-danger: #ff6b6b;
   --color-shadow: rgb(0 0 0 / 0.5);
+  /* Dropdown arrow (lucide chevron-down) in the muted text color. */
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239b9ba1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  --control-height-small: 34px;
 
   --space-xs: 4px;
   --space-sm: 8px;
@@ -38,6 +42,7 @@
   --color-accent-text: #ffffff;
   --color-danger: #d32f2f;
   --color-shadow: rgb(0 0 0 / 0.12);
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
   color-scheme: light;
 }
@@ -75,8 +80,8 @@ a {
   outline-offset: 2px;
 }
 
-/* Korzeń aplikacji trzyma wysokość okna; nagłówek bierze swoje, ekran resztę.
-   Dzięki temu pasek odtwarzacza może zjechać na dół bez wymuszania scrolla. */
+/* The app root holds the window height; the header takes its share, the screen
+   the rest. This lets the player bar sit at the bottom without forcing a scroll. */
 .app {
   min-height: 100dvh;
   display: flex;
@@ -121,7 +126,7 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
-/* Kontrolki paska (język, motyw, GitHub): jedno pudełko 32 px, sama ikona w środku. */
+/* Top bar controls (language, theme, GitHub): one 32 px box with just an icon. */
 .icon-control {
   display: inline-flex;
   align-items: center;
@@ -144,7 +149,26 @@ a {
   display: block;
 }
 
-/* Gdy widać pasek odtwarzacza, przewijanie do elementu zostawia na niego miejsce. */
+/* While the player bar is visible, scrolling to an element leaves room for it. */
 html.has-player {
   scroll-padding-bottom: 170px;
+}
+
+/* Shared style for every native <select>: drops the native arrow (glued to the
+   right edge on macOS) for our own and matches the height of small buttons. */
+.select {
+  appearance: none;
+  height: var(--control-height-small);
+  padding: 0 28px 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-alt);
+  background-image: var(--select-arrow);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
 }

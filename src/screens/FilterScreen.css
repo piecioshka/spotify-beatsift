@@ -37,19 +37,9 @@
   cursor: pointer;
 }
 
-/* Przycisk zapisu siedzi w tym samym rzędzie co sortowanie i idzie do prawej. */
+/* The save button sits in the same row as sorting and goes to the right. */
 .filter__export {
   margin-left: auto;
-}
-
-.filter__select {
-  padding: 6px 10px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-alt);
-  color: var(--color-text);
-  font: inherit;
-  font-size: 14px;
 }
 
 .filter__check {
