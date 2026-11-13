@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-const OUTPUT = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'og.png');
+const OUTPUT = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'og-image.png');
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
   <rect width="${WIDTH}" height="${HEIGHT}" fill="#121212" />

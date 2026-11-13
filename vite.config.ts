@@ -51,7 +51,7 @@ function seo(siteUrlRaw: string | undefined): Plugin {
     name: 'beatsift-seo',
     transformIndexHtml() {
       if (!pageUrl) return [];
-      const image = `${siteUrl}/og.png`;
+      const image = `${siteUrl}/og-image.png`;
       const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'WebApplication',

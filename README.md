@@ -24,7 +24,7 @@ It is a Spotify app in development mode, so only accounts added to its user
 list can log in. To use it with your own account, run it yourself with your
 own Client ID (see [CONTRIBUTING.md](CONTRIBUTING.md)).
 
-![Beatsift filter screen with two range sliders, sort options and a list of matching tracks](assets/screenshot.png)
+![Beatsift filter screen with two range sliders, sort options and a list of matching tracks](docs/screenshots/main.png)
 
 ## Features ✨
 
