@@ -59,5 +59,5 @@ const COMPARATORS: Record<SortKey, Comparator> = {
  */
 export function sortTracks(rows: TrackRow[], key: SortKey): TrackRow[] {
   const primary = COMPARATORS[key];
-  return [...rows].sort((a, b) => primary(a, b) || compareByName(a, b));
+  return rows.toSorted((a, b) => primary(a, b) || compareByName(a, b));
 }
